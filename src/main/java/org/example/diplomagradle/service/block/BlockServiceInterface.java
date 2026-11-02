@@ -5,6 +5,7 @@ import org.example.diplomagradle.datamodel.entity.Block;
 import java.util.List;
 import java.util.Optional;
 
+//интерфейс для обработки задач с сущностью Block
 public interface BlockServiceInterface {
     //добавить блок
     public void putBlock(String title);

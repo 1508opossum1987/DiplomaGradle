@@ -1,6 +1,6 @@
 package org.example.diplomagradle.service.block;
 
-//пустая колелкция блоков
+//пустая коллекция блоков
 public class EmptyBlocksException extends RuntimeException {
     public EmptyBlocksException() {
         super("The blocks is empty");
