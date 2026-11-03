@@ -1,6 +1,9 @@
 package org.example.diplomagradle.datamodel.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.Set;
 
 //сущность с названиями показателей
 @Entity
@@ -27,6 +30,12 @@ public class Metric {
     @ManyToOne
     @JoinColumn(name = "f_block_id", nullable = false)
     private Block block;
+
+    //связь со значениями показателей
+    @OneToMany (mappedBy = "metric")
+    //убираем рекурсивный взаимовызов при запросе
+    @JsonIgnore
+    private Set<MetricValue> metricValues;
 
     public Metric() {
     }
@@ -69,5 +78,13 @@ public class Metric {
 
     public void setBlock(Block block) {
         this.block = block;
+    }
+
+    public Set<MetricValue> getMetricValues() {
+        return metricValues;
+    }
+
+    public void setMetricValues(Set<MetricValue> metricValues) {
+        this.metricValues = metricValues;
     }
 }

@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface MetricRepository extends JpaRepository<Metric, Long> {
     Optional<Metric> findByMetricName(String metricName);
+    boolean existsByBlockId(Long blockId);
 }

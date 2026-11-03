@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 //интерфейс-репозиторий сущности Block - типов блоков показателей
 @Repository
 public interface BlockRepository extends JpaRepository<Block, Long> {
+
 }

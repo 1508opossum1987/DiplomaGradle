@@ -1,5 +1,6 @@
 package org.example.diplomagradle.api.blockApi;
 
+import org.example.diplomagradle.api.messages.StringMessage;
 import org.example.diplomagradle.datamodel.entity.Block;
 import org.example.diplomagradle.service.block.BlockServiceInterface;
 import org.springframework.http.HttpStatus;
@@ -19,8 +20,9 @@ public class BlockApiController {
     //добавление блока показателей
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public void putBlockApi(@RequestBody String title){
+    public StringMessage putBlockApi(@RequestBody String title){
         blockServiceInterface.putBlock(title);
+        return (new StringMessage("Success"));
     }
 
     //получение всех блоков показателей
@@ -37,14 +39,16 @@ public class BlockApiController {
 
     //удаление блока по id
     @DeleteMapping("/{id}")
-    public void deleteBlockByIdApi(@PathVariable Long id) {
+    public StringMessage deleteBlockByIdApi(@PathVariable Long id) {
         blockServiceInterface.deleteBlockById(id);
+        return (new StringMessage("Success"));
     }
 
     //удаление всех блоков
-    @DeleteMapping("/all-delete")
-    public void deleteAllBlocksApi(){
+    @DeleteMapping("")
+    public StringMessage deleteAllBlocksApi(){
         blockServiceInterface.deleteAllBlocks();
+        return (new StringMessage("Success"));
     }
 
 }

@@ -1,6 +1,5 @@
 package org.example.diplomagradle.service.metric;
 
-import org.example.diplomagradle.datamodel.entity.Block;
 import org.example.diplomagradle.datamodel.entity.Metric;
 
 import java.util.List;
@@ -8,7 +7,7 @@ import java.util.List;
 //интерфейс для обработки задач с сущностью Metric
 public interface MetricServiceInterface {
     //добавить показатель
-    public void addMertic(MetricValues values);
+    public void addMetric(MetricValues values);
 
     //получить все показатели
     public List<Metric> getAllMetrics();

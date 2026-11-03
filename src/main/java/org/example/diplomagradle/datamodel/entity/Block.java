@@ -1,5 +1,6 @@
 package org.example.diplomagradle.datamodel.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.persistence.GeneratedValue;
 
@@ -19,6 +20,8 @@ public class Block {
 
     //связь с сущностью Metric
     @OneToMany(mappedBy = "block")
+    //убираем рекурсивный взаимовызов при запросе
+    @JsonIgnore
     private Set<Metric> metrics;
 
     public Block() {}

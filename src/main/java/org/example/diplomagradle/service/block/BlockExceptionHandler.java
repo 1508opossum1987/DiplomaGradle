@@ -12,13 +12,18 @@ public class BlockExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
-    @ExceptionHandler(InvalidIdException.class)
-    public ResponseEntity<String> handleInvalidId(InvalidIdException ex) {
+    @ExceptionHandler(InvalidIdBlockException.class)
+    public ResponseEntity<String> handleInvalidId(InvalidIdBlockException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
-    @ExceptionHandler(InvalidTitleException.class)
-    public ResponseEntity<String> handleInvalidTitle(InvalidTitleException ex) {
+    @ExceptionHandler(InvalidTitleBlockException.class)
+    public ResponseEntity<String> handleInvalidTitle(InvalidTitleBlockException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(BlockHasMetricsException.class)
+    public ResponseEntity<String> handleBlockHasMetrics(BlockHasMetricsException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 }

@@ -4,6 +4,7 @@ import org.example.diplomagradle.datamodel.entity.Block;
 import org.example.diplomagradle.datamodel.entity.Metric;
 import org.example.diplomagradle.datamodel.repository.MetricRepository;
 import org.example.diplomagradle.service.block.BlockServiceInterface;
+import org.example.diplomagradle.service.block.EmptyBlocksException;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,10 +23,19 @@ public class MetricService implements MetricServiceInterface {
 
     //добавить показатель
     @Override
-    public void addMertic(MetricValues values) {
+    public void addMetric(MetricValues values) {
+        if (values == null){
+            throw new InvalidMetricValuesException(null, "values is empty");
+        }
+
+        if(metricRepository.findByMetricName(values.metricName()).isPresent()){
+            throw new DuplicateNameMetricException(values.metricName());
+        }
+
         Block block = blockServiceInterface.getBlockById(values.blockId());
 
         Metric metric = new Metric();
+
         metric.setMetricName(values.metricName());
         metric.setUnit(values.unit());
         metric.setType(values.type());
@@ -51,10 +61,12 @@ public class MetricService implements MetricServiceInterface {
     }
 
     //получить показатель по названию
+    @Override
     public Metric getMetricByName(String name){
         if(name == null || name.trim().isEmpty()){
             throw new InvalidMetricNameException(name);
         }
+
         Optional<Metric> metrics = metricRepository.findByMetricName(name);
         if(metrics.isEmpty()){
             throw new InvalidMetricNameException(name);
@@ -72,13 +84,33 @@ public class MetricService implements MetricServiceInterface {
     //удалить все показатели
     @Override
     public void deleteAllMetrics() {
+        if (metricRepository.findAll().isEmpty()){
+            throw new EmptyMetricsException();
+        }
         metricRepository.deleteAll();
     }
 
     //изменить название показателя с поиском по названию
     @Override
     public void patchMetricNameByName(String oldName, String newName) {
+        if(oldName == null || oldName.trim().isEmpty()){
+            throw new InvalidMetricNameException(oldName);
+        }
+
+        if(newName == null || newName.trim().isEmpty()){
+            throw new InvalidMetricNameException(newName);
+        }
+
+        if (newName.equals(oldName)){
+            throw new DuplicateNameMetricException(newName);
+        }
+
+        if(metricRepository.findByMetricName(newName).isPresent()){
+            throw new DuplicateNameMetricException(newName);
+        }
+
         Metric metric = getMetricByName(oldName);
+
         metric.setMetricName(newName);
         metricRepository.save(metric);
     }
@@ -87,14 +119,35 @@ public class MetricService implements MetricServiceInterface {
     @Override
     public void patchMetricNameById(Long id, String newName) {
         Metric metric = getMetricById(id);
+        if(newName == null || newName.trim().isEmpty()){
+            throw new InvalidMetricNameException(newName);
+        }
+
+        if (newName.equals(metric.getMetricName())) {
+            throw new DuplicateNameMetricException(newName);
+        }
+
+        if (metricRepository.findByMetricName(newName).isPresent()) {
+            throw new DuplicateNameMetricException(newName);
+        }
+
         metric.setMetricName(newName);
         metricRepository.save(metric);
     }
 
-    //изменить тип показателя с поиском по названию
+    //изменить единицы измерения показателя с поиском по названию
     @Override
     public void patchMetricUnitByName(String name, String newUnit) {
+        if(name == null || name.trim().isEmpty()){
+            throw new InvalidMetricNameException(name);
+        }
+
+        if (newUnit == null || newUnit.trim().isEmpty()) {
+            throw new InvalidUnitMetricException(newUnit);
+        }
+
         Metric metric = getMetricByName(name);
+
         metric.setUnit(newUnit);
         metricRepository.save(metric);
     }
@@ -102,7 +155,12 @@ public class MetricService implements MetricServiceInterface {
     //изменить тип показателя с поиском по id
     @Override
     public void patchMetricUnitById(Long id, String newUnit) {
+        if (newUnit == null || newUnit.trim().isEmpty()) {
+            throw new InvalidUnitMetricException(newUnit);
+        }
+
         Metric metric = getMetricById(id);
+
         metric.setUnit(newUnit);
         metricRepository.save(metric);
     }
