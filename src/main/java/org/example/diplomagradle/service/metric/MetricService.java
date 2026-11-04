@@ -3,6 +3,7 @@ package org.example.diplomagradle.service.metric;
 import org.example.diplomagradle.datamodel.entity.Block;
 import org.example.diplomagradle.datamodel.entity.Metric;
 import org.example.diplomagradle.datamodel.repository.MetricRepository;
+import org.example.diplomagradle.datamodel.repository.MetricValueRepository;
 import org.example.diplomagradle.service.block.BlockServiceInterface;
 import org.example.diplomagradle.service.block.EmptyBlocksException;
 
@@ -13,12 +14,16 @@ import java.util.Optional;
 public class MetricService implements MetricServiceInterface {
     private final MetricRepository metricRepository;
 
+    private final MetricValueRepository metricValueRepository;
+
     private final BlockServiceInterface blockServiceInterface;
 
     public MetricService(MetricRepository metricRepository,
-                         BlockServiceInterface blockServiceInterface) {
+                         BlockServiceInterface blockServiceInterface,
+                         MetricValueRepository metricValueRepository) {
         this.metricRepository = metricRepository;
         this.blockServiceInterface = blockServiceInterface;
+        this.metricValueRepository = metricValueRepository;
     }
 
     //добавить показатель
@@ -78,6 +83,9 @@ public class MetricService implements MetricServiceInterface {
     @Override
     public void deleteMetricById(Long id) {
         Metric metric = getMetricById(id);
+        if (metricValueRepository.existsByMetricId(id)) {
+            throw new MetricHasMetricValuesException(id);
+        }
         metricRepository.delete(metric);
     }
 
@@ -86,6 +94,9 @@ public class MetricService implements MetricServiceInterface {
     public void deleteAllMetrics() {
         if (metricRepository.findAll().isEmpty()){
             throw new EmptyMetricsException();
+        }
+        if (!(metricValueRepository.count() == 0)) {
+            throw new MetricHasMetricValuesException();
         }
         metricRepository.deleteAll();
     }
@@ -163,5 +174,16 @@ public class MetricService implements MetricServiceInterface {
 
         metric.setUnit(newUnit);
         metricRepository.save(metric);
+    }
+
+    //получить показатели по названию блока показателей Block
+    @Override
+    public List<Metric> getMetricByTitleBlock(String blockTitle){
+        Block block = blockServiceInterface.getBlockByTitle(blockTitle);
+        List<Metric> metrics = metricRepository.findByBlockId(block.getId());
+        if (metrics.isEmpty()) {
+            throw new EmptyMetricsException();
+        }
+        return metrics;
     }
 }

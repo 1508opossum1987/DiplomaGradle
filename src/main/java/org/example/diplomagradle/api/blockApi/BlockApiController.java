@@ -32,7 +32,7 @@ public class BlockApiController {
     }
 
     //получение блока по id
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public Block getBlockByIdApi(@PathVariable Long id){
         return blockServiceInterface.getBlockById(id);
     }
@@ -49,6 +49,12 @@ public class BlockApiController {
     public StringMessage deleteAllBlocksApi(){
         blockServiceInterface.deleteAllBlocks();
         return (new StringMessage("Success"));
+    }
+
+    //получение блока по title
+    @GetMapping("/title/{title}")
+    public Block getBlockByTitleApi(@PathVariable String title){
+        return blockServiceInterface.getBlockByTitle(title);
     }
 
 }

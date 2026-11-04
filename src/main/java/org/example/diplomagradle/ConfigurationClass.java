@@ -7,7 +7,9 @@ import org.example.diplomagradle.service.block.BlockService;
 import org.example.diplomagradle.service.block.BlockServiceInterface;
 import org.example.diplomagradle.service.metric.MetricService;
 import org.example.diplomagradle.service.metric.MetricServiceInterface;
+import org.example.diplomagradle.service.metricValue.MetricValueService;
 import org.example.diplomagradle.service.metricValue.MetricValueServiceInterface;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,12 +23,14 @@ public class ConfigurationClass {
 
     @Bean
     public MetricServiceInterface metricService(MetricRepository metricRepository,
-                                                BlockServiceInterface blockServiceInterface ) {
-        return new MetricService(metricRepository, blockServiceInterface);
+                                                BlockServiceInterface blockServiceInterface,
+                                                MetricValueRepository metricValueRepository) {
+        return new MetricService(metricRepository, blockServiceInterface, metricValueRepository);
     }
 
-//    @Bean
-//    public MetricValueServiceInterface metricValueService(MetricValueRepository metricValueRepository) {
-//        return new MetricValueServiceInterface(metricValueRepository);
-//    }
+    @Bean
+    public MetricValueServiceInterface metricValueService(MetricValueRepository metricValueRepository,
+                                                          MetricServiceInterface metricServiceInterface) {
+        return new MetricValueService(metricValueRepository, metricServiceInterface);
+    }
 }

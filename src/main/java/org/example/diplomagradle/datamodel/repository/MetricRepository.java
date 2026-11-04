@@ -4,6 +4,7 @@ import org.example.diplomagradle.datamodel.entity.Metric;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 //интерфейс-репозиторий для сущности Metric
@@ -11,4 +12,5 @@ import java.util.Optional;
 public interface MetricRepository extends JpaRepository<Metric, Long> {
     Optional<Metric> findByMetricName(String metricName);
     boolean existsByBlockId(Long blockId);
+    List<Metric> findByBlockId(Long blockId);
 }

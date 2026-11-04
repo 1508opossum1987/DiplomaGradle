@@ -38,4 +38,9 @@ public class MetricExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
+    @ExceptionHandler(MetricHasMetricValuesException.class)
+    public ResponseEntity<String> handleMerticHasMetricValues(MetricHasMetricValuesException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
 }

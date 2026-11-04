@@ -40,11 +40,11 @@ public class MetricValue {
     private Integer year;
 
     //плановое значение показателя
-    @Column(name="f_plan", nullable = false, precision = 10, scale = 1)
+    @Column(name="f_plan", precision = 10, scale = 1)
     private BigDecimal plan;
 
     //фактическое значение показателя
-    @Column(name="f_fact", nullable = false, precision = 10, scale = 1)
+    @Column(name="f_fact", precision = 10, scale = 1)
     private BigDecimal fact;
 
     //кто последний изменил показатель

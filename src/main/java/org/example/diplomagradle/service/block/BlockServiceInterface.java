@@ -21,4 +21,7 @@ public interface BlockServiceInterface {
 
     //удалить все блоки
     public void deleteAllBlocks();
+
+    //получить блок по title
+    public Block getBlockByTitle(String title);
 }

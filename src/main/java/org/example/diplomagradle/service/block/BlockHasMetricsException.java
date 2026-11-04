@@ -5,6 +5,6 @@ public class BlockHasMetricsException extends RuntimeException {
         super("This block id: "+id+ " has metrics");
     }
     public BlockHasMetricsException() {
-        super("Some block has metrics");
+        super("This block has some metrics");
     }
 }

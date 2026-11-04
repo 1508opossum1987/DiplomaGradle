@@ -35,4 +35,7 @@ public interface MetricServiceInterface {
 
     //изменить единицу измерения показателя по id
     public void patchMetricUnitById(Long id, String newUnit);
+
+    //получить показатели по названию блока показателей Block
+    public List<Metric> getMetricByTitleBlock(String blockTitle);
 }

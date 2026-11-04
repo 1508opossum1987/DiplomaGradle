@@ -19,17 +19,22 @@ public class BlockService implements BlockServiceInterface{
     }
 
     //добавление блока показателей
+    @Override
     public void putBlock(String title){
-        Block block = new Block();
-        if (title!=null && !title.trim().isEmpty()){
-            block.setTitle(title);
-            blockRepository.save(block);
+        if (title == null || title.trim().isEmpty()) {
+            throw new InvalidTitleBlockException(title);
         }
-        else throw new InvalidTitleBlockException(title);
+        if (blockRepository.existsByTitle(title)) {
+            throw new DuplicateTitleBlockException(title);
+        }
+        Block block = new Block();
+        block.setTitle(title);
+        blockRepository.save(block);
 
     }
 
     //получить все блоки
+    @Override
     public List<Block> getAllBlocks() {
         if (blockRepository.findAll().isEmpty()){
             throw new EmptyBlocksException();
@@ -38,6 +43,7 @@ public class BlockService implements BlockServiceInterface{
     }
 
     //получить блок по id
+    @Override
     public Block getBlockById(Long id){
         Optional<Block> blocks = blockRepository.findById(id);
         if (blocks.isEmpty()){
@@ -47,6 +53,7 @@ public class BlockService implements BlockServiceInterface{
     }
 
     //удалить блок по номеру (id)
+    @Override
     public void deleteBlockById(Long id) {
         Block block = getBlockById(id);
         if (metricRepository.existsByBlockId(id)) {
@@ -56,6 +63,7 @@ public class BlockService implements BlockServiceInterface{
     }
 
     //удаление всех блоков
+    @Override
     public void deleteAllBlocks(){
         if (!(metricRepository.count() == 0)){
             throw new BlockHasMetricsException();
@@ -64,5 +72,18 @@ public class BlockService implements BlockServiceInterface{
             throw new EmptyBlocksException();
         }
         blockRepository.deleteAll();
+    }
+
+    //получить блок по title
+    @Override
+    public Block getBlockByTitle(String title) {
+        if (title == null || title.trim().isEmpty()) {
+            throw new InvalidTitleBlockException(title);
+        }
+        Optional<Block> block = blockRepository.findByTitle(title);
+        if (block.isEmpty()) {
+            throw new InvalidTitleBlockException(title);
+        }
+        return block.get();
     }
 }

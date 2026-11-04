@@ -26,4 +26,9 @@ public class BlockExceptionHandler {
     public ResponseEntity<String> handleBlockHasMetrics(BlockHasMetricsException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
+
+    @ExceptionHandler(DuplicateTitleBlockException.class)
+    public ResponseEntity<String> handleDuplicateTitleBlock(DuplicateTitleBlockException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
 }
