@@ -3,6 +3,7 @@ package org.example.diplomagradle.datamodel.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 //сущность с названиями показателей
@@ -36,6 +37,14 @@ public class Metric {
     //убираем рекурсивный взаимовызов при запросе
     @JsonIgnore
     private Set<MetricValue> metricValues;
+
+    //минимальное значение показателя
+    @Column(name = "f_min_value", precision = 10, scale = 1)
+    private BigDecimal minValue;
+
+    //максимальное значение показателя
+    @Column(name = "f_max_value", precision = 10, scale = 1)
+    private BigDecimal maxValue;
 
     public Metric() {
     }
@@ -86,5 +95,21 @@ public class Metric {
 
     public void setMetricValues(Set<MetricValue> metricValues) {
         this.metricValues = metricValues;
+    }
+
+    public BigDecimal getMinValue() {
+        return minValue;
+    }
+
+    public void setMinValue(BigDecimal minValue) {
+        this.minValue = minValue;
+    }
+
+    public BigDecimal getMaxValue() {
+        return maxValue;
+    }
+
+    public void setMaxValue(BigDecimal maxValue) {
+        this.maxValue = maxValue;
     }
 }

@@ -1,0 +1,33 @@
+INSERT INTO t_block (f_title)
+VALUES ('Безопасность'),
+       ('Качество'),
+       ('Производство'),
+       ('Экономика'),
+       ('Корпоративная культура') ON CONFLICT (f_title) DO NOTHING;
+
+INSERT INTO t_metric (f_metric_name, f_unit, f_type, f_block_id)
+VALUES ('Травматизм', 'случай', 'MANUAL', (SELECT id FROM t_block WHERE f_title = 'Безопасность')),
+       ('Замечания по ОТ', 'штук', 'MANUAL', (SELECT id FROM t_block WHERE f_title = 'Безопасность')),
+       ('Браки по БД', 'случай', 'MANUAL', (SELECT id FROM t_block WHERE f_title = 'Безопасность')),
+       ('Отказы тех средств', 'случай', 'MANUAL', (SELECT id FROM t_block WHERE f_title = 'Безопасность')),
+       ('Простой транзитных вагонов с/п', 'час', 'MANUAL', (SELECT id FROM t_block WHERE f_title = 'Качество')),
+       ('Простой транзитных вагонов б/п', 'час', 'MANUAL', (SELECT id FROM t_block WHERE f_title = 'Качество')),
+       ('Простой местных вагонов', 'час', 'CALCULATED', (SELECT id FROM t_block WHERE f_title = 'Качество')),
+       ('Процент выполнения графика', 'процент', 'MANUAL', (SELECT id FROM t_block WHERE f_title = 'Качество')),
+       ('Рабочий парк вагонов', 'вагон', 'MANUAL', (SELECT id FROM t_block WHERE f_title = 'Качество')),
+       ('Отправлено грузовых вагонов', 'вагон', 'MANUAL', (SELECT id FROM t_block WHERE f_title = 'Производство')),
+       ('Расформировано', 'вагон', 'MANUAL', (SELECT id FROM t_block WHERE f_title = 'Производство')),
+       ('Доходы', 'рублей', 'MANUAL', (SELECT id FROM t_block WHERE f_title = 'Производство')),
+       ('Погрузка', 'вагон', 'CALCULATED', (SELECT id FROM t_block WHERE f_title = 'Производство')),
+       ('Выгрузка', 'вагон', 'CALCULATED', (SELECT id FROM t_block WHERE f_title = 'Производство')),
+       ('Запасы ТМЦ', 'рублей', 'MANUAL', (SELECT id FROM t_block WHERE f_title = 'Производство')),
+       ('Производительность труда', 'вагон/человек', 'MANUAL', (SELECT id FROM t_block WHERE f_title = 'Экономика')),
+       ('Фонд оплаты труда', 'рублей', 'MANUAL', (SELECT id FROM t_block WHERE f_title = 'Экономика')),
+       ('Расходы', 'рублей', 'MANUAL', (SELECT id FROM t_block WHERE f_title = 'Экономика')),
+       ('Себестоимость', 'рублей/вагон', 'MANUAL', (SELECT id FROM t_block WHERE f_title = 'Экономика')),
+       ('Прибыль', 'рублей', 'MANUAL', (SELECT id FROM t_block WHERE f_title = 'Экономика')),
+       ('Темп роста производительности труда', 'процент', 'MANUAL', (SELECT id FROM t_block WHERE f_title = 'Экономика')),
+       ('Численность работников', 'человек', 'MANUAL', (SELECT id FROM t_block WHERE f_title = 'Корпоративная культура')),
+       ('Средняя зарплата', 'рублей', 'MANUAL', (SELECT id FROM t_block WHERE f_title = 'Корпоративная культура')),
+       ('Темп роста зарплаты', 'процент', 'MANUAL', (SELECT id FROM t_block WHERE f_title = 'Корпоративная культура')),
+       ('Текучесть кадров', 'процент', 'MANUAL', (SELECT id FROM t_block WHERE f_title = 'Корпоративная культура'));
