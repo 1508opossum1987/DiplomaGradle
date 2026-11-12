@@ -17,7 +17,7 @@ public class Wagon {
     //номер вагона от 20000000 до 99999999
     @Min(20000000)
     @Max(99999999)
-    @Column(name = "f_number", nullable = false, unique = true)
+    @Column(name = "f_number", nullable = false)
     private Long number;
 
     //категория вагона - из списка

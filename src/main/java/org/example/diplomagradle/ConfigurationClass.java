@@ -3,6 +3,7 @@ package org.example.diplomagradle;
 import org.example.diplomagradle.datamodel.repository.BlockRepository;
 import org.example.diplomagradle.datamodel.repository.MetricRepository;
 import org.example.diplomagradle.datamodel.repository.MetricValueRepository;
+import org.example.diplomagradle.datamodel.repository.WagonRepository;
 import org.example.diplomagradle.service.block.BlockService;
 import org.example.diplomagradle.service.block.BlockServiceInterface;
 import org.example.diplomagradle.service.metric.MetricService;
@@ -10,8 +11,13 @@ import org.example.diplomagradle.service.metric.MetricServiceInterface;
 import org.example.diplomagradle.service.metricValue.MetricValueService;
 import org.example.diplomagradle.service.metricValue.MetricValueServiceInterface;
 
+import org.example.diplomagradle.service.wagon.WagonService;
+import org.example.diplomagradle.service.wagon.WagonServiceInterface;
+import org.example.diplomagradle.service.wagon.WagonTestDataService;
+import org.example.diplomagradle.service.wagon.WagonTestDataServiceInterface;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
 public class ConfigurationClass {
@@ -32,5 +38,17 @@ public class ConfigurationClass {
     public MetricValueServiceInterface metricValueService(MetricValueRepository metricValueRepository,
                                                           MetricServiceInterface metricServiceInterface) {
         return new MetricValueService(metricValueRepository, metricServiceInterface);
+    }
+
+    @Bean
+    public WagonServiceInterface wagonService(WagonRepository wagonRepository,
+                                              JdbcTemplate jdbcTemplate) {
+        return new WagonService(wagonRepository, jdbcTemplate);
+    }
+
+    @Bean
+    public WagonTestDataServiceInterface wagonTestDataService(WagonRepository wagonRepository,
+                                                              JdbcTemplate jdbcTemplate) {
+        return new WagonTestDataService(wagonRepository, jdbcTemplate);
     }
 }
