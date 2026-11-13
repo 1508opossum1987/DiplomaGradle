@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Показатель')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+
+    <a th:href="@{/}" class="btn btn-link mb-2">← На главную</a>
+
+    <h1 class="mb-4" th:text="${metric.metricName} + ' (' + ${metric.unit} + ')'">Травматизм (случай)</h1>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Год</th>
+            <th>Месяц</th>
+            <th class="text-end">План</th>
+            <th class="text-end">Факт</th>
+            <th>Кто изменил</th>
+            <th>Когда</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="value : ${values}">
+            <td th:text="${value.year()}">2026</td>
+            <td th:text="${value.month()}">10</td>
+            <td class="text-end" th:text="${value.plan() != null ? value.plan() : '—'}">0.0</td>
+            <td class="text-end" th:text="${value.fact() != null ? value.fact() : '—'}">0.0</td>
+            <td th:text="${value.updatedBy() != null ? value.updatedBy() : '—'}">system</td>
+            <td th:text="${value.updatedAt()}">01:10:2026 12:00</td>
+            <td class="text-end">
+                <a class="btn btn-outline-primary btn-sm"
+                   th:href="@{/metric/{mid}/edit/{vid}(mid=${metricId}, vid=${value.id()})}">
+                    Редактировать
+                </a>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(values)}">
+            <td colspan="7" class="text-center text-muted">Нет данных</td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

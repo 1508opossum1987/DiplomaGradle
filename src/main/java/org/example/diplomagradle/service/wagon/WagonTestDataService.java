@@ -53,7 +53,7 @@ public class WagonTestDataService implements WagonTestDataServiceInterface{
             if (!date.isBefore(today)) {
                 break;
             }
-            int wagonsPerDay = 4000 + random.nextInt(1501);
+            int wagonsPerDay = 250 + random.nextInt(101);
             for (int i = 0; i < wagonsPerDay; i++) {
                 WagonValues values = randomWagonValues(ym, date);
                 batch.add(buildWagon(values));
@@ -81,7 +81,7 @@ public class WagonTestDataService implements WagonTestDataServiceInterface{
 
             for (int day = 1; day <= daysInMonth; day++) {
                 LocalDate date = current.atDay(day);
-                int wagonsPerDay = 4000 + random.nextInt(1501);
+                int wagonsPerDay = 250 + random.nextInt(101);
                 for (int i = 0; i < wagonsPerDay; i++) {
                     WagonValues values = randomWagonValues(current, date);
                     batch.add(buildWagon(values));
@@ -127,44 +127,27 @@ public class WagonTestDataService implements WagonTestDataServiceInterface{
         if (category == WagonCategory.LOCAL) {
             loading = LoadingType.values()[random.nextInt(LoadingType.values().length)];
         } else {
-            loading = LoadingType.NONE;//у неместных не может быть иного значения
+            loading = LoadingType.NONE;
         }
 
-        boolean departed = random.nextInt(100) < 99; //99 % вагонов отправляются
-        LocalDateTime departureAt = null;
-        LocalDateTime lastOperationAt;
-        WagonOperationType lastOperation;
+        boolean sameDay = random.nextInt(100) < 90;
 
-        if (departed) {
-            boolean sameDay = random.nextInt(100) < 90; //90% отправляются в эти же сутки
-
-            LocalDateTime departureCandidate;
-            if (sameDay) {
-                departureCandidate = arrivalAt.plusMinutes(1 + random.nextInt(180));//+180 минут от прибытия задел
-            } else {
-                int addDays = 1 + random.nextInt(3);
-                LocalDate departureDate = day.plusDays(addDays);
-                LocalTime departureTime = LocalTime.of(random.nextInt(24), random.nextInt(60));
-                departureCandidate = LocalDateTime.of(departureDate, departureTime);
-                if (!departureCandidate.isAfter(arrivalAt)) {
-                    departureCandidate = arrivalAt.plusMinutes(1);
-                }
-            }
-
-            departureAt = departureCandidate;
-            lastOperationAt = departureAt;
-            lastOperation = WagonOperationType.DEPARTURE;
+        LocalDateTime departureCandidate;
+        if (sameDay) {
+            departureCandidate = arrivalAt.plusMinutes(1 + random.nextInt(180));
         } else {
-            lastOperation = WagonOperationType.values()[random.nextInt(WagonOperationType.values().length)];
-            if (lastOperation == WagonOperationType.DEPARTURE) {
-                lastOperation = WagonOperationType.PROCESSING;
-            }
-            LocalTime opTime = LocalTime.of(random.nextInt(24), random.nextInt(60));
-            lastOperationAt = LocalDateTime.of(day, opTime);
-            if (lastOperationAt.isBefore(arrivalAt)) {
-                lastOperationAt = arrivalAt;
+            int addDays = 1 + random.nextInt(3);
+            LocalDate departureDate = day.plusDays(addDays);
+            LocalTime departureTime = LocalTime.of(random.nextInt(24), random.nextInt(60));
+            departureCandidate = LocalDateTime.of(departureDate, departureTime);
+            if (!departureCandidate.isAfter(arrivalAt)) {
+                departureCandidate = arrivalAt.plusMinutes(1);
             }
         }
+
+        LocalDateTime departureAt = departureCandidate;
+        LocalDateTime lastOperationAt = departureAt;
+        WagonOperationType lastOperation = WagonOperationType.DEPARTURE;
 
         return new WagonValues(number, category, lastOperation, lastOperationAt,
                 arrivalAt, departureAt, loading);

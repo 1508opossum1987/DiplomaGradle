@@ -5,6 +5,7 @@ import org.example.diplomagradle.datamodel.entity.wagon.Wagon;
 import org.example.diplomagradle.service.wagon.WagonServiceInterface;
 import org.example.diplomagradle.service.wagon.WagonTestDataServiceInterface;
 import org.example.diplomagradle.service.wagon.WagonValues;
+import org.example.diplomagradle.service.wagon.wagonMetric.WagonMetricServiceInterface;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,10 +18,14 @@ public class WagonApiController {
 
     private final WagonTestDataServiceInterface wagonTestDataServiceInterface;
 
+    private final WagonMetricServiceInterface wagonMetricServiceInterface;
+
     public WagonApiController(WagonServiceInterface wagonServiceInterface,
-                              WagonTestDataServiceInterface wagonTestDataServiceInterface){
+                              WagonTestDataServiceInterface wagonTestDataServiceInterface,
+                              WagonMetricServiceInterface wagonMetricServiceInterface){
         this.wagonServiceInterface = wagonServiceInterface;
         this.wagonTestDataServiceInterface = wagonTestDataServiceInterface;
+        this.wagonMetricServiceInterface = wagonMetricServiceInterface;
     }
 
     //получить все вагоны
@@ -69,7 +74,7 @@ public class WagonApiController {
         return new StringMessage("Success");
     }
 
-    //генерация тестовых данных за разрешенный месяц
+    //генерация тестовых данных за разрешенный период
     @PostMapping("/generate")
     public StringMessage generateForMonthApi(@RequestParam Integer year, @RequestParam Integer month) {
         wagonTestDataServiceInterface.generateForMonth(year, month);
@@ -80,6 +85,13 @@ public class WagonApiController {
     @PostMapping("/generate-history")
     public StringMessage generateHistoryApi() {
         wagonTestDataServiceInterface.generateHistory();
+        return new StringMessage("Success");
+    }
+
+    //утсановка расчетных показателей
+    @PostMapping("/calculate")
+    public StringMessage calculateMetricsForMonthApi(@RequestParam Integer year, @RequestParam Integer month) {
+        wagonMetricServiceInterface.calculateAndSaveForMonth(year, month);
         return new StringMessage("Success");
     }
 }

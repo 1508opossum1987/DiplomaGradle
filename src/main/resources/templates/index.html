@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Инфоцентр предприятия')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Показатели за месяц</h1>
+        <span class="text-muted" th:text="${month} + '/' + ${year}">10/2026</span>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-12" th:each="block : ${blocks}">
+            <div class="block-card" th:classappend="${block.colorClass()}">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="mb-0" th:text="${block.title()}">Безопасность</h3>
+                    <a class="btn btn-light btn-sm"
+                       th:href="@{/block/{id}(id=${block.id()}, year=${year}, month=${month})}">
+                        Перейти к блоку
+                    </a>
+                </div>
+
+                <table class="table table-sm table-light mb-0">
+                    <thead>
+                    <tr>
+                        <th>Показатель</th>
+                        <th>Ед. изм.</th>
+                        <th class="text-end">План</th>
+                        <th class="text-end">Факт</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="metric : ${block.metrics()}">
+                        <td th:text="${metric.name()}">Травматизм</td>
+                        <td th:text="${metric.unit()}">случай</td>
+                        <td class="text-end" th:text="${metric.plan() != null ? metric.plan() : '—'}">0.0</td>
+                        <td class="text-end" th:text="${metric.fact() != null ? metric.fact() : '—'}">0.0</td>
+                        <td class="text-end">
+                            <a class="btn btn-outline-dark btn-sm"
+                               th:href="@{/metric/{id}(id=${metric.id()})}">Подробнее</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Редактирование показателя')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+
+    <a th:href="@{/metric/{id}(id=${value.metricId()})}" class="btn btn-link mb-2">← К показателю</a>
+
+    <h1 class="mb-4" th:text="${metricName} + ' (' + ${unit} + ')'">Травматизм (случай)</h1>
+
+    <form method="post"
+          th:action="@{/metric/{mid}/edit/{vid}(mid=${value.metricId()}, vid=${value.id()})}"
+          class="row g-3" style="max-width: 500px;">
+
+        <input type="hidden" name="year" th:value="${value.year()}">
+        <input type="hidden" name="month" th:value="${value.month()}">
+
+        <div class="col-12">
+            <label class="form-label">Период</label>
+            <input type="text" class="form-control" disabled
+                   th:value="${value.month()} + '/' + ${value.year()}">
+        </div>
+
+        <div class="col-12">
+            <label class="form-label">План</label>
+            <input type="number" step="0.1" class="form-control" name="plan"
+                   th:value="${value.plan()}" required>
+        </div>
+
+        <div class="col-12">
+            <label class="form-label">Факт</label>
+            <input type="number" step="0.1" class="form-control" name="fact"
+                   th:value="${value.fact()}" required>
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a th:href="@{/metric/{id}(id=${value.metricId()})}" class="btn btn-secondary">Отмена</a>
+        </div>
+    </form>
+
+</div>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

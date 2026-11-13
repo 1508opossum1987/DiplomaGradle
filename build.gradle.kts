@@ -31,7 +31,8 @@ dependencies {
     implementation ("org.flywaydb:flyway-core")
     implementation ("org.flywaydb:flyway-database-postgresql")
     implementation ("org.springframework.boot:spring-boot-starter-flyway")
-
+    implementation ("org.webjars:bootstrap:5.3.3")
+    implementation ("org.webjars:webjars-locator-core")
 }
 tasks.withType<Test> {
     useJUnitPlatform()

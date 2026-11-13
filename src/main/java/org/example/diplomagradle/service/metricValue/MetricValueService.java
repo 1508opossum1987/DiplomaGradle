@@ -4,6 +4,7 @@ import org.example.diplomagradle.datamodel.entity.Metric;
 import org.example.diplomagradle.datamodel.entity.MetricValue;
 import org.example.diplomagradle.datamodel.repository.MetricValueRepository;
 import org.example.diplomagradle.service.metric.InvalidMetricNameException;
+import org.example.diplomagradle.service.metric.MetricRestrictionValidatorInterface;
 import org.example.diplomagradle.service.metric.MetricServiceInterface;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,10 +18,14 @@ public class MetricValueService implements MetricValueServiceInterface{
 
     private final MetricServiceInterface metricServiceInterface;
 
+    private final MetricRestrictionValidatorInterface metricRestrictionValidator;
+
     public MetricValueService (MetricValueRepository metricValueRepository,
-                               MetricServiceInterface metricServiceInterface) {
+                               MetricServiceInterface metricServiceInterface,
+                               MetricRestrictionValidatorInterface metricRestrictionValidator) {
         this.metricValueRepository = metricValueRepository;
         this.metricServiceInterface = metricServiceInterface;
+        this.metricRestrictionValidator = metricRestrictionValidator;
     }
 
     //добавить запись всех значений показателя по id Metric
@@ -31,7 +36,7 @@ public class MetricValueService implements MetricValueServiceInterface{
         }
 
         Metric metric = metricServiceInterface.getMetricById(values.metricId());
-        validateRestrictions(metric, values.plan(), values.fact());
+        metricRestrictionValidator.validate(metric, values.plan(), values.fact());
 
         if (metricValueRepository.existsByMetricIdAndMonthAndYear(values.metricId(), values.month(), values.year())){
             throw new DuplicateMetricValueException(values.metricId(), values.month(), values.year());
@@ -129,7 +134,7 @@ public class MetricValueService implements MetricValueServiceInterface{
 
         Metric metric = metricServiceInterface.getMetricByName(metricName);
 
-        validateRestrictions(metric, newPlan, newFact);
+        metricRestrictionValidator.validate(metric, newPlan, newFact);
 
         MetricValue metricValue = metricValueRepository
                 .findByMetricIdAndMonthAndYear(metric.getId(), month, year)
@@ -169,7 +174,7 @@ public class MetricValueService implements MetricValueServiceInterface{
         MetricValue metricValue = metricValueRepository.findById(metricValueId)
                 .orElseThrow(() -> new InvalidIdMetricValueException(metricValueId));
 
-        validateRestrictions(metricValue.getMetric(), newPlan, newFact);
+        metricRestrictionValidator.validate(metricValue.getMetric(), newPlan, newFact);
 
         metricValueRepository
                 .findByMetricIdAndMonthAndYear(metricValue.getMetric().getId(), month, year)
@@ -211,7 +216,7 @@ public class MetricValueService implements MetricValueServiceInterface{
                 .findByMetricIdAndMonthAndYear(metric.getId(), month, year)
                 .orElseThrow(() -> new EmptyMetricValuesException(metricName, month, year));
 
-        validateRestrictions(metric, newPlan, null);
+        metricRestrictionValidator.validate(metric, newPlan, null);
 
         metricValue.setPlan(newPlan);
         metricValue.setUpdatedAt(LocalDateTime.now());
@@ -239,7 +244,7 @@ public class MetricValueService implements MetricValueServiceInterface{
                 .findByMetricIdAndMonthAndYear(metric.getId(), month, year)
                 .orElseThrow(() -> new EmptyMetricValuesException(metricName, month, year));
 
-        validateRestrictions(metric, null, newFact);
+        metricRestrictionValidator.validate(metric, null, newFact);
 
         metricValue.setFact(newFact);
         metricValue.setUpdatedAt(LocalDateTime.now());
@@ -274,7 +279,7 @@ public class MetricValueService implements MetricValueServiceInterface{
                             + ", got " + month + "/" + year);
         }
 
-        validateRestrictions(metricValue.getMetric(), newPlan, newFact);
+        metricRestrictionValidator.validate(metricValue.getMetric(), newPlan, newFact);
 
         metricValue.setPlan(newPlan);
         metricValue.setFact(newFact);
@@ -283,29 +288,29 @@ public class MetricValueService implements MetricValueServiceInterface{
         metricValueRepository.save(metricValue);
     }
 
-    //метод для проверки вхождения плановых и фактических значений показателя в допустимые
-    //границы minValue, maxValue, установленные для показателя
-    private void validateRestrictions(Metric metric, BigDecimal plan, BigDecimal fact) {
-        if (metric.getMinValue() != null) {
-            if (plan != null && plan.compareTo(metric.getMinValue()) < 0) {
-                throw new InvalidMetricValueValuesException(
-                        "plan below min value for metric '" + metric.getMetricName() + "': " + metric.getMinValue());
-            }
-            if (fact != null && fact.compareTo(metric.getMinValue()) < 0) {
-                throw new InvalidMetricValueValuesException(
-                        "fact below min value for metric '" + metric.getMetricName() + "': " + metric.getMinValue());
-            }
-        }
-        if (metric.getMaxValue() != null) {
-            if (plan != null && plan.compareTo(metric.getMaxValue()) > 0) {
-                throw new InvalidMetricValueValuesException(
-                        "plan above max value for metric '" + metric.getMetricName() + "': " + metric.getMaxValue());
-            }
-            if (fact != null && fact.compareTo(metric.getMaxValue()) > 0) {
-                throw new InvalidMetricValueValuesException(
-                        "fact above max value for metric '" + metric.getMetricName() + "': " + metric.getMaxValue());
-            }
-        }
-    }
+//    //метод для проверки вхождения плановых и фактических значений показателя в допустимые
+//    //границы minValue, maxValue, установленные для показателя
+//    private void validateRestrictions(Metric metric, BigDecimal plan, BigDecimal fact) {
+//        if (metric.getMinValue() != null) {
+//            if (plan != null && plan.compareTo(metric.getMinValue()) < 0) {
+//                throw new InvalidMetricValueValuesException(
+//                        "plan below min value for metric '" + metric.getMetricName() + "': " + metric.getMinValue());
+//            }
+//            if (fact != null && fact.compareTo(metric.getMinValue()) < 0) {
+//                throw new InvalidMetricValueValuesException(
+//                        "fact below min value for metric '" + metric.getMetricName() + "': " + metric.getMinValue());
+//            }
+//        }
+//        if (metric.getMaxValue() != null) {
+//            if (plan != null && plan.compareTo(metric.getMaxValue()) > 0) {
+//                throw new InvalidMetricValueValuesException(
+//                        "plan above max value for metric '" + metric.getMetricName() + "': " + metric.getMaxValue());
+//            }
+//            if (fact != null && fact.compareTo(metric.getMaxValue()) > 0) {
+//                throw new InvalidMetricValueValuesException(
+//                        "fact above max value for metric '" + metric.getMetricName() + "': " + metric.getMaxValue());
+//            }
+//        }
+//    }
 
 }

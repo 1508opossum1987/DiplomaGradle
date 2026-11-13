@@ -1,4 +1,4 @@
-package org.example.diplomagradle.api.metricValieApi;
+package org.example.diplomagradle.api.metricValueApi;
 
 import org.example.diplomagradle.api.messages.StringMessage;
 import org.example.diplomagradle.datamodel.entity.MetricValue;
