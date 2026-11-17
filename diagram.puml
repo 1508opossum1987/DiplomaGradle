@@ -1,0 +1,86 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Block {
+  - Long id
+  - String title
+  + getId()
+  + getTitle()
+}
+
+class Metric {
+  - Long id
+  - String metricName
+  - String unit
+  - MetricsType type
+  - BigDecimal minValue
+  - BigDecimal maxValue
+  + getId()
+  + getMetricName()
+}
+
+class MetricValue {
+  - Long id
+  - Integer month
+  - Integer year
+  - BigDecimal plan
+  - BigDecimal fact
+  - String updatedBy
+  - LocalDateTime updatedAt
+  + getId()
+}
+
+class Wagon {
+  - Long id
+  - Long number
+  - WagonCategory category
+  - WagonOperationType lastOperation
+  - LocalDateTime lastOperationAt
+  - LocalDateTime arrivalAt
+  - LocalDateTime departureAt
+  - LoadingType loading
+  + getId()
+}
+
+enum MetricsType {
+  MANUAL
+  CALCULATED
+}
+
+enum WagonCategory {
+  TRANSIT_WITHOUT_PROCESSING
+  TRANSIT_WITH_PROCESSING
+  LOCAL
+}
+
+enum WagonOperationType {
+  ARRIVAL
+  DEPARTURE
+  LOADING
+  UNLOADING
+  REPAIR
+  PROCESSING
+  SPOTTING
+  REMOVAL
+  WAITING_SPOTTING
+  WAITING_REMOVAL
+  WAITING_REPAIR
+  WAITING_OPER
+  DISBANDMENT
+}
+
+enum LoadingType {
+  NONE
+  LOADING
+  UNLOADING
+  BOTH
+}
+
+Block "1" -- "*" Metric : содержит
+Metric "1" -- "*" MetricValue : имеет значения
+Metric --> MetricsType
+Wagon --> WagonCategory
+Wagon --> WagonOperationType
+Wagon --> LoadingType
+
+@enduml

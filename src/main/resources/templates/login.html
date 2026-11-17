@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Вход')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container" style="max-width: 400px; margin-top: 80px;">
+
+    <h1 class="mb-4 text-center">Вход в систему</h1>
+
+    <div th:if="${param.error}" class="alert alert-danger">
+        Неверный логин или пароль
+    </div>
+
+    <div th:if="${param.logout}" class="alert alert-success">
+        Вы вышли из системы
+    </div>
+
+    <form method="post" th:action="@{/login}">
+        <div class="mb-3">
+            <label class="form-label">Логин</label>
+            <input type="text" class="form-control" name="username" required autofocus>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Пароль</label>
+            <input type="password" class="form-control" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Войти</button>
+    </form>
+
+</div>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

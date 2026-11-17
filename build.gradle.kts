@@ -33,6 +33,7 @@ dependencies {
     implementation ("org.springframework.boot:spring-boot-starter-flyway")
     implementation ("org.webjars:bootstrap:5.3.3")
     implementation ("org.webjars:webjars-locator-core")
+    implementation("org.springframework.boot:spring-boot-starter-security")
 }
 tasks.withType<Test> {
     useJUnitPlatform()

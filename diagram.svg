@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 700" width="900" height="700" font-family="Arial, sans-serif" font-size="13">
+  <rect width="900" height="700" fill="#ffffff"/>
+
+  <!-- Block -->
+  <g transform="translate(60,60)">
+    <rect width="200" height="90" fill="#f8f9fa" stroke="#333" stroke-width="1.5"/>
+    <rect width="200" height="28" fill="#e9ecef" stroke="#333" stroke-width="1.5"/>
+    <text x="100" y="19" text-anchor="middle" font-weight="bold">Block</text>
+    <text x="8" y="46">- Long id</text>
+    <text x="8" y="64">- String title</text>
+    <line x1="0" y1="52" x2="200" y2="52" stroke="#333"/>
+    <text x="8" y="82">+ getId()</text>
+  </g>
+
+  <!-- Metric -->
+  <g transform="translate(60,240)">
+    <rect width="220" height="150" fill="#f8f9fa" stroke="#333" stroke-width="1.5"/>
+    <rect width="220" height="28" fill="#e9ecef" stroke="#333" stroke-width="1.5"/>
+    <text x="110" y="19" text-anchor="middle" font-weight="bold">Metric</text>
+    <text x="8" y="46">- Long id</text>
+    <text x="8" y="64">- String metricName</text>
+    <text x="8" y="82">- String unit</text>
+    <text x="8" y="100">- MetricsType type</text>
+    <text x="8" y="118">- BigDecimal minValue</text>
+    <text x="8" y="136">- BigDecimal maxValue</text>
+  </g>
+
+  <!-- MetricValue -->
+  <g transform="translate(60,450)">
+    <rect width="220" height="140" fill="#f8f9fa" stroke="#333" stroke-width="1.5"/>
+    <rect width="220" height="28" fill="#e9ecef" stroke="#333" stroke-width="1.5"/>
+    <text x="110" y="19" text-anchor="middle" font-weight="bold">MetricValue</text>
+    <text x="8" y="46">- Long id</text>
+    <text x="8" y="64">- Integer month</text>
+    <text x="8" y="82">- Integer year</text>
+    <text x="8" y="100">- BigDecimal plan</text>
+    <text x="8" y="118">- BigDecimal fact</text>
+  </g>
+
+  <!-- Wagon -->
+  <g transform="translate(500,60)">
+    <rect width="260" height="180" fill="#f8f9fa" stroke="#333" stroke-width="1.5"/>
+    <rect width="260" height="28" fill="#e9ecef" stroke="#333" stroke-width="1.5"/>
+    <text x="130" y="19" text-anchor="middle" font-weight="bold">Wagon</text>
+    <text x="8" y="46">- Long id</text>
+    <text x="8" y="64">- Long number</text>
+    <text x="8" y="82">- WagonCategory category</text>
+    <text x="8" y="100">- WagonOperationType lastOperation</text>
+    <text x="8" y="118">- LocalDateTime lastOperationAt</text>
+    <text x="8" y="136">- LocalDateTime arrivalAt</text>
+    <text x="8" y="154">- LocalDateTime departureAt</text>
+    <text x="8" y="172">- LoadingType loading</text>
+  </g>
+
+  <!-- Связь Block - Metric -->
+  <line x1="160" y1="150" x2="160" y2="240" stroke="#333"/>
+  <text x="165" y="200" font-size="11">1..*</text>
+
+  <!-- Связь Metric - MetricValue -->
+  <line x1="160" y1="390" x2="160" y2="450" stroke="#333"/>
+  <text x="165" y="425" font-size="11">1..*</text>
+
+  <!-- Enum MetricsType -->
+  <g transform="translate(340,240)">
+    <rect width="150" height="80" fill="#fff3cd" stroke="#333"/>
+    <rect width="150" height="28" fill="#ffe69c" stroke="#333"/>
+    <text x="75" y="19" text-anchor="middle" font-weight="bold">«enum» MetricsType</text>
+    <text x="8" y="46">MANUAL</text>
+    <text x="8" y="64">CALCULATED</text>
+  </g>
+  <line x1="280" y1="300" x2="340" y2="280" stroke="#333"/>
+
+  <!-- Enum WagonCategory -->
+  <g transform="translate(500,300)">
+    <rect width="230" height="98" fill="#fff3cd" stroke="#333"/>
+    <rect width="230" height="28" fill="#ffe69c" stroke="#333"/>
+    <text x="115" y="19" text-anchor="middle" font-weight="bold">«enum» WagonCategory</text>
+    <text x="8" y="46">TRANSIT_WITHOUT_PROCESSING</text>
+    <text x="8" y="64">TRANSIT_WITH_PROCESSING</text>
+    <text x="8" y="82">LOCAL</text>
+  </g>
+
+  <!-- Enum LoadingType -->
+  <g transform="translate(500,430)">
+    <rect width="170" height="98" fill="#fff3cd" stroke="#333"/>
+    <rect width="170" height="28" fill="#ffe69c" stroke="#333"/>
+    <text x="85" y="19" text-anchor="middle" font-weight="bold">«enum» LoadingType</text>
+    <text x="8" y="46">NONE</text>
+    <text x="8" y="64">LOADING</text>
+    <text x="8" y="82">UNLOADING</text>
+  </g>
+
+  <!-- Enum WagonOperationType -->
+  <g transform="translate(340,450)">
+    <rect width="130" height="200" fill="#fff3cd" stroke="#333"/>
+    <rect width="130" height="28" fill="#ffe69c" stroke="#333"/>
+    <text x="65" y="19" text-anchor="middle" font-weight="bold">«enum» WagonOperationType</text>
+    <text x="8" y="46">ARRIVAL</text>
+    <text x="8" y="64">DEPARTURE</text>
+    <text x="8" y="82">LOADING</text>
+    <text x="8" y="100">UNLOADING</text>
+    <text x="8" y="118">REPAIR</text>
+    <text x="8" y="136">PROCESSING</text>
+    <text x="8" y="154">SPOTTING</text>
+    <text x="8" y="172">REMOVAL</text>
+    <text x="8" y="190">DISBANDMENT</text>
+  </g>
+</svg>
