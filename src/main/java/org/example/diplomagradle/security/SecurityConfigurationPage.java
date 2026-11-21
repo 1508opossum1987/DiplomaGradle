@@ -3,6 +3,7 @@ package org.example.diplomagradle.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,11 +25,19 @@ public class SecurityConfigurationPage {
         httpSecurity
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
                 .authorizeHttpRequests(r -> r
-                        .requestMatchers("/css/**", "/webjars/**").permitAll()
-                        .requestMatchers("/").authenticated()
-                        .requestMatchers("/block/**").authenticated()
-                        .requestMatchers("/metric/**").authenticated()
-                        .anyRequest().authenticated()
+                .requestMatchers("/css/**", "/webjars/**").permitAll()
+                .requestMatchers("/login", "/register").permitAll()
+                .requestMatchers(HttpMethod.GET, "/user", "/user/**").authenticated()
+                .requestMatchers("/user", "/user/**").hasRole("ADMIN")
+                .requestMatchers("/role/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/block", "/block/**").authenticated()
+                .requestMatchers("/block", "/block/**").hasRole("ADMIN")
+                .requestMatchers("/metric/*/edit/**").authenticated()
+                .requestMatchers(HttpMethod.GET, "/metric", "/metric/**").authenticated()
+                .requestMatchers("/metric", "/metric/**").hasRole("ADMIN")
+                .requestMatchers("/metric-test-data/**").hasRole("ADMIN")
+                .requestMatchers("/").authenticated()
+                .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")

@@ -111,8 +111,9 @@ public class ConfigurationClass {
 
     //бин для UserService
     @Bean
-    public UserServiceInterface userServiceInterface(UserRepository userRepository, PasswordEncoder passwordEncoder){
-        return new UserService(userRepository, passwordEncoder);
+    public UserServiceInterface userServiceInterface(UserRepository userRepository, PasswordEncoder passwordEncoder,
+                                                     RoleServiceInterface roleServiceInterface){
+        return new UserService(userRepository, passwordEncoder, roleServiceInterface);
     }
 
     //Бин для UserDetailsService

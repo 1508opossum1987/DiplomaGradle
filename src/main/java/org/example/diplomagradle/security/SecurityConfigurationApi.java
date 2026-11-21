@@ -20,7 +20,11 @@ public class SecurityConfigurationApi {
         httpSecurity.securityMatcher("/api/**")
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
                 .authorizeHttpRequests(r->
-                r.requestMatchers(HttpMethod.GET, "/api/block", "/api/block/**").authenticated()
+                r.requestMatchers(HttpMethod.POST, "/api/user/register").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/user", "/api/user/**").authenticated()
+                .requestMatchers("/api/user", "/api/user/**").hasRole("ADMIN")
+                .requestMatchers(("/api/role/**")).hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/block", "/api/block/**").authenticated()
                 .requestMatchers("/api/block","/api/block/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/metric", "/api/metric/**").authenticated()
                 .requestMatchers("/api/metric","/api/metric/**").hasRole("ADMIN")

@@ -3,6 +3,7 @@ package org.example.diplomagradle.service.user;
 import org.example.diplomagradle.datamodel.entity.users.Role;
 import org.example.diplomagradle.datamodel.entity.users.User;
 import org.example.diplomagradle.datamodel.repository.UserRepository;
+import org.example.diplomagradle.service.role.RoleServiceInterface;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
@@ -14,9 +15,13 @@ public class UserService implements UserServiceInterface {
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    private final RoleServiceInterface roleServiceInterface;
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+                       RoleServiceInterface roleServiceInterface) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.roleServiceInterface = roleServiceInterface;
     }
 
     //получить всех пользователей
@@ -122,7 +127,7 @@ public class UserService implements UserServiceInterface {
 
     //регистрация нового пользователя
     @Override
-    public void registerUser(UserValues values) {
+    public void registerUser(RegisterUserValues values) {
         if (values == null) {
             throw new InvalidUserValuesException(null, "values of users are empty");
         }
@@ -133,13 +138,16 @@ public class UserService implements UserServiceInterface {
             throw new DuplicateEmailException(values.email());
         }
 
+        Role userRole = roleServiceInterface.getRoleByName("USER");
+
         User user = new User();
+
         user.setUsername(values.username());
         user.setPassword(passwordEncoder.encode(values.password()));
         user.setEnabled(true);
         user.setName(values.name());
         user.setEmail(values.email());
-        user.setRole(values.role()); // сюда контроллер передаст роль USER
+        user.setRole(userRole);
 
         userRepository.save(user);
     }

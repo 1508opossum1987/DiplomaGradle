@@ -26,5 +26,5 @@ public interface UserServiceInterface {
     public void changeUserByUsername(String username, UserValues values);
 
     //регистрация пользователей
-    void registerUser(UserValues values);
+    void registerUser(RegisterUserValues values);
 }
