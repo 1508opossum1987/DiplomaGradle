@@ -44,22 +44,22 @@ public class SecurityConfigurationPage {
 
     // сервис для работы с пользователями
     // реализованный в виде in-memory заглушки
-    @Bean
-    public UserDetailsService userDetailsService() {
-        // подготовим тестовых пользователей через встроенные типы
-        UserDetails user = User.builder()
-            .username("user")
-            .password("qwerty")
-            .passwordEncoder(passwordEncoder()::encode)
-            .build();
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password("qwerty")
-                .passwordEncoder(passwordEncoder()::encode)
-                .roles("ADMIN")
-                .build();
-
-        // подготовка тестовой имплементации UserDetailsService
-        return new InMemoryUserDetailsManager(user, admin);
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        // подготовим тестовых пользователей через встроенные типы
+//        UserDetails user = User.builder()
+//            .username("user")
+//            .password("qwerty")
+//            .passwordEncoder(passwordEncoder()::encode)
+//            .build();
+//        UserDetails admin = User.builder()
+//                .username("admin")
+//                .password("qwerty")
+//                .passwordEncoder(passwordEncoder()::encode)
+//                .roles("ADMIN")
+//                .build();
+//
+//        // подготовка тестовой имплементации UserDetailsService
+//        return new InMemoryUserDetailsManager(user, admin);
+//    }
 }

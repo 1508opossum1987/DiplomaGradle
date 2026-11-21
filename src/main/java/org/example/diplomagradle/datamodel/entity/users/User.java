@@ -11,21 +11,45 @@ public class User {
     private Long id;
 
     //логин
-    @Column(name = "t_username", nullable = false)
+    @Column(name = "f_username", nullable = false)
     private String username;
 
     //пароль
-    @Column(name = "f_password", nullable = false, unique = true)
+    @Column(name = "f_password", nullable = false)
     private String password;
 
     //активность
-    @Column(name = "f_enabled", nullable = false, columnDefinition = "boolean default true")
+    @Column(name = "f_enabled", nullable = false)
     private Boolean enabled = true;
 
     //связь с Role
     @ManyToOne
     @JoinColumn(name = "f_role_id", nullable = false)
     private Role role;
+
+    //имя по русски
+    @Column(name = "f_name", nullable = false)
+    private String name;
+
+    //почта
+    @Column(name = "f_email", nullable = false)
+    private String email;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     //
     public User() {

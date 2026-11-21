@@ -9,6 +9,8 @@ f_username VARCHAR(100) NOT NULL UNIQUE,
 f_password VARCHAR(255) NOT NULL,
 f_enabled BOOLEAN NOT NULL DEFAULT TRUE,
 f_role_id BIGINT NOT NULL,
+f_name VARCHAR(100) NOT NULL UNIQUE,
+f_email VARCHAR(100) NOT NULL UNIQUE,
 CONSTRAINT fk_user_role FOREIGN KEY (f_role_id) REFERENCES t_role(id)
 );
 
@@ -21,15 +23,17 @@ INSERT INTO t_role (f_name) VALUES
 ('ECONOMIST'),
 ('ZAM_HR'),
 ('HEALTH_ENG'),
-('SAFETY_ENG');
+('SAFETY_ENG'),
+('NORM_ENG');
 
-INSERT INTO t_user (f_username, f_password, f_enabled, f_role_id) VALUES
-('admin','fc8252c8dc55839967c58b9ad755a59b61b67c13227ddae4bd3f78a38bf394f7', TRUE, (SELECT id FROM t_role WHERE f_name = 'ADMIN')),
-('user','3deb95d7e9257e2d4f83bf34226aa6bd99f077a57a54b37954e96afe5938a812', TRUE, (SELECT id FROM t_role WHERE f_name = 'USER')),
-('director','63ebd714e24eeef48f397a6b939a5c254b6c835b1948abfa21f9b18fa6db6bd1', TRUE, (SELECT id FROM t_role WHERE f_name = 'DIRECTOR')),
-('zam_bd','6dbf31ad342479bc615edc5e53d4fd6ed864a0aef008667d61e7d700482b77f6', TRUE, (SELECT id FROM t_role WHERE f_name = 'ZAM_BD')),
-('zam_oper','05653e8fdf8e1d8f0d4b7ff7043f680abfd76d3148e00c941d2a3aa46677dce7', TRUE, (SELECT id FROM t_role WHERE f_name = 'ZAM_OPER')),
-('economist','ca5e3617f7d879c551d3380a4119dc398a97e0aa94eb3fe651205fe2f5c3d521', TRUE, (SELECT id FROM t_role WHERE f_name = 'ECONOMIST')),
-('zam_hr','e7e4d370c6ab07101d540a364c809543e5696f25aa833d54afb35ba85fa48cd6', TRUE, (SELECT id FROM t_role WHERE f_name = 'ZAM_HR')),
-('health_eng','324f1f225288826ecf9c9fc21ecbe278b28de5c9e878c1dca8207b3eb34fe9d3', TRUE, (SELECT id FROM t_role WHERE f_name = 'HEALTH_ENG')),
-('safety_eng','814a580121f85a53fa6d440fd6d56d1e083a0620202d6587ad3e2e19a4866e2a', TRUE, (SELECT id FROM t_role WHERE f_name = 'SAFETY_ENG'));
+INSERT INTO t_user (f_username, f_password, f_enabled, f_role_id, f_name, f_email) VALUES
+('admin','$2a$10$8Yqclan4phXKT5WYZoIgm.KqAmyjroOIftoUMjDGrmHi7xFeaJ8Bm', TRUE, (SELECT id FROM t_role WHERE f_name = 'ADMIN'), 'Евгений Васильев', 'evgen@gmail.com'),
+('user','$2a$10$St6Tqa/MjbMe6.qtpLmZmuJJ7uQcJqnytfpn4Vpw3jUlTGQ73fJk.', TRUE, (SELECT id FROM t_role WHERE f_name = 'USER'), 'Егор Козловский', 'kzle@gmail.com'),
+('director','$2a$10$7MzBKzwryIaKdQkuhAfe3OmecyFP0c2OZ.OMbx35f7fnXeCMlnUni', TRUE, (SELECT id FROM t_role WHERE f_name = 'DIRECTOR'), 'Степан Богатырев', 'muromec@gmail.com'),
+('zam_bd','$2a$10$tRm7oEdMWyosLSBJVwVdneXCN1lbAAkhzkFsfmysN68LDTjcdraqi', TRUE, (SELECT id FROM t_role WHERE f_name = 'ZAM_BD'), 'Александр Клопотов', 'klop@gmail.com'),
+('zam_oper','$2a$10$OEhOuKbs4Dx.hvBsq9QaH.tBpKbcRZBvgcNMLz9QoV.DdHx2pW5t2', TRUE, (SELECT id FROM t_role WHERE f_name = 'ZAM_OPER'), 'Вячеслав Пуртов', 'v.purtov@gmail.com'),
+('economist','$2a$10$F1CXY5lP1uFEWKUpb7i/3.CPcjVm7oZ228gHnpj/gRbn5lPMqJPum', TRUE, (SELECT id FROM t_role WHERE f_name = 'ECONOMIST'), 'Снежана Добровольская', 'sneg_econ@gmail.com'),
+('zam_hr','$2a$10$DyPJu36SLTMH8vbVuu13e.3uJrItVdgZ/zWhcrR93XWbFH3Bt6aYi', TRUE, (SELECT id FROM t_role WHERE f_name = 'ZAM_HR'), 'Елизавета Макарова', 'hrLiza@gmail.com'),
+('health_eng','$2a$10$pKdjTduJbA5Z2sQGxNZ1X.qiJ63oVlxoulO9q8uSJ6eK2R9oYjhMm', TRUE, (SELECT id FROM t_role WHERE f_name = 'HEALTH_ENG'), 'Илья Бекасов', 'kprf@gmail.com'),
+('safety_eng','$2a$10$mXI29DFSBFjHwSX25n0TyuQnSbQMILzMKd2QO6iPJeSrOcxBisppm', TRUE, (SELECT id FROM t_role WHERE f_name = 'SAFETY_ENG'), 'Петр Колбасов', 'kol_p@gmail.com'),
+('norm_eng','$2a$10$.wXl3hprVGKtWAhw7xgazevjQ9WgHMD/aNzlPv3lwfzSI5q.hhbiW', TRUE, (SELECT id FROM t_role WHERE f_name = 'NORM_ENG'), 'Ирина Смолягина', 'smol@gmail.com');

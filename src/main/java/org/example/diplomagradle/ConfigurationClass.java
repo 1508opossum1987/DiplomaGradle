@@ -1,9 +1,6 @@
 package org.example.diplomagradle;
 
-import org.example.diplomagradle.datamodel.repository.BlockRepository;
-import org.example.diplomagradle.datamodel.repository.MetricRepository;
-import org.example.diplomagradle.datamodel.repository.MetricValueRepository;
-import org.example.diplomagradle.datamodel.repository.WagonRepository;
+import org.example.diplomagradle.datamodel.repository.*;
 import org.example.diplomagradle.service.block.BlockService;
 import org.example.diplomagradle.service.block.BlockServiceInterface;
 import org.example.diplomagradle.service.metric.MetricRestrictionValidator;
@@ -19,6 +16,10 @@ import org.example.diplomagradle.service.metricValue.metricDataService.TestDataS
 import org.example.diplomagradle.service.metricValue.metricDataService.TestDataServiceInterface;
 import org.example.diplomagradle.service.page.PageService;
 import org.example.diplomagradle.service.page.PageServiceInterface;
+import org.example.diplomagradle.service.role.RoleService;
+import org.example.diplomagradle.service.role.RoleServiceInterface;
+import org.example.diplomagradle.service.user.UserService;
+import org.example.diplomagradle.service.user.UserServiceInterface;
 import org.example.diplomagradle.service.wagon.WagonService;
 import org.example.diplomagradle.service.wagon.WagonServiceInterface;
 import org.example.diplomagradle.service.wagon.WagonTestDataService;
@@ -28,6 +29,9 @@ import org.example.diplomagradle.service.wagon.wagonMetric.WagonMetricServiceInt
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.example.diplomagradle.service.user.detail.DbUserDetailService;
 
 
 @Configuration
@@ -97,5 +101,23 @@ public class ConfigurationClass {
                                             MetricRepository metricRepository,
                                             MetricValueRepository metricValueRepository) {
         return new PageService(blockRepository, metricRepository, metricValueRepository);
+    }
+
+    //бин для RoleService
+    @Bean
+    public RoleServiceInterface roleServiceInterface (RoleRepository roleRepository){
+        return new RoleService(roleRepository);
+    }
+
+    //бин для UserService
+    @Bean
+    public UserServiceInterface userServiceInterface(UserRepository userRepository, PasswordEncoder passwordEncoder){
+        return new UserService(userRepository, passwordEncoder);
+    }
+
+    //Бин для UserDetailsService
+    @Bean
+    public UserDetailsService userDetailsService(UserRepository userRepository) {
+        return new DbUserDetailService(userRepository);
     }
 }
