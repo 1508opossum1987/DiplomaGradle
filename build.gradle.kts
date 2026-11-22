@@ -34,6 +34,7 @@ dependencies {
     implementation ("org.webjars:bootstrap:5.3.3")
     implementation ("org.webjars:webjars-locator-core")
     implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
 }
 tasks.withType<Test> {
     useJUnitPlatform()

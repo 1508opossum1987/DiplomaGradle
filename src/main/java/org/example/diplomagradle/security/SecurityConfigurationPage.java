@@ -7,12 +7,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -23,7 +19,6 @@ public class SecurityConfigurationPage {
     @Order(2)
     public SecurityFilterChain securityFilterChainPage(HttpSecurity httpSecurity){
         httpSecurity
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
                 .authorizeHttpRequests(r -> r
                 .requestMatchers("/css/**", "/webjars/**").permitAll()
                 .requestMatchers("/login", "/register").permitAll()
@@ -36,11 +31,12 @@ public class SecurityConfigurationPage {
                 .requestMatchers(HttpMethod.GET, "/metric", "/metric/**").authenticated()
                 .requestMatchers("/metric", "/metric/**").hasRole("ADMIN")
                 .requestMatchers("/metric-test-data/**").hasRole("ADMIN")
-                .requestMatchers("/").authenticated()
                 .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
+                        .permitAll()
+                        .defaultSuccessUrl("/", true)
                         .permitAll()
                 );
         return httpSecurity.build();

@@ -69,18 +69,18 @@ public class MetricValueApiController {
     //обновление всех значений показателя с поиском по названию показателя, году и месяцу
     @PutMapping ("/metric-name/{metricName}")
     public StringMessage putAllMetricValuesByMetricNameMonthYearApi(@PathVariable String metricName, @RequestParam Integer year, @RequestParam Integer month,
-                                                           @RequestParam BigDecimal newPlan, @RequestParam BigDecimal newFact, @RequestParam String updatedBy){
+                                                           @RequestParam BigDecimal newPlan, @RequestParam BigDecimal newFact){
         metricValueServiceInterface.putAllMetricValuesByMetricNameMonthYear(metricName, year,
-                month, newPlan, newFact, updatedBy);
+                month, newPlan, newFact);
         return (new StringMessage("Success"));
     }
 
     //обновление всех значений показателя с поиском по id записи, году и месяцу
     @PutMapping("/metric-value-id/{metricValueId}")
     public StringMessage putAllMetricValuesByMetricValueIdMonthYearApi(@PathVariable Long metricValueId, @RequestParam Integer year, @RequestParam Integer month,
-                                                              @RequestParam BigDecimal newPlan, @RequestParam BigDecimal newFact, @RequestParam String updatedBy){
+                                                              @RequestParam BigDecimal newPlan, @RequestParam BigDecimal newFact){
         metricValueServiceInterface.putAllMetricValuesByMetricValueIdMonthYear(metricValueId, year, month,
-        newPlan, newFact, updatedBy);
+        newPlan, newFact);
         return (new StringMessage("Success"));
     }
 

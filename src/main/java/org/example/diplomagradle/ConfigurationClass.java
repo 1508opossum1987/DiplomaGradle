@@ -18,6 +18,7 @@ import org.example.diplomagradle.service.page.PageService;
 import org.example.diplomagradle.service.page.PageServiceInterface;
 import org.example.diplomagradle.service.role.RoleService;
 import org.example.diplomagradle.service.role.RoleServiceInterface;
+import org.example.diplomagradle.service.user.CurrentUserProvider;
 import org.example.diplomagradle.service.user.UserService;
 import org.example.diplomagradle.service.user.UserServiceInterface;
 import org.example.diplomagradle.service.wagon.WagonService;
@@ -52,8 +53,10 @@ public class ConfigurationClass {
     @Bean
     public MetricValueServiceInterface metricValueService(MetricValueRepository metricValueRepository,
                                                           MetricServiceInterface metricServiceInterface,
-                                                          MetricRestrictionValidatorInterface metricRestrictionValidatorInterface) {
-        return new MetricValueService(metricValueRepository, metricServiceInterface, metricRestrictionValidatorInterface);
+                                                          MetricRestrictionValidatorInterface metricRestrictionValidatorInterface,
+                                                          CurrentUserProvider currentUserProvider) {
+        return new MetricValueService(metricValueRepository, metricServiceInterface,
+                metricRestrictionValidatorInterface, currentUserProvider);
     }
 
     @Bean
@@ -120,5 +123,12 @@ public class ConfigurationClass {
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
         return new DbUserDetailService(userRepository);
+    }
+
+    //добавление в зависимость прослойки для получения данных о пользователе
+    //из security
+    @Bean
+    public CurrentUserProvider currentUserProvider() {
+        return new CurrentUserProvider();
     }
 }

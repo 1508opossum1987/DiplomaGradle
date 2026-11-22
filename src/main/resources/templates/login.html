@@ -13,6 +13,10 @@
         Неверный логин или пароль
     </div>
 
+    <div th:if="${param.registered}" class="alert alert-success">
+        Регистрация успешна. Войдите с новыми данными.
+    </div>
+
     <div th:if="${param.logout}" class="alert alert-success">
         Вы вышли из системы
     </div>

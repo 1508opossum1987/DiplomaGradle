@@ -38,4 +38,8 @@ public class AppUserDetails implements UserDetails {
     public boolean isEnabled() {
         return Boolean.TRUE.equals(user.getEnabled());
     }
+
+    public User getUser(){
+        return user;
+    }
 }

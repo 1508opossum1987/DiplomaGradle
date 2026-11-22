@@ -33,10 +33,10 @@ public interface MetricValueServiceInterface {
     public void deleteAllMetricValuesByMetricName(String metricName);
 
     //обновление всех значений показателя с поиском по названию показателя, году и месяцу
-    public void putAllMetricValuesByMetricNameMonthYear(String metricName, Integer year, Integer month, BigDecimal newPlan, BigDecimal newFact, String updatedBy);
+    public void putAllMetricValuesByMetricNameMonthYear(String metricName, Integer year, Integer month, BigDecimal newPlan, BigDecimal newFact);
 
     //обновление всех значений показателя с поиском по id записи, году и месяцу
-    public void putAllMetricValuesByMetricValueIdMonthYear(Long metricValueId, Integer year, Integer month, BigDecimal newPlan, BigDecimal newFact, String updatedBy);
+    public void putAllMetricValuesByMetricValueIdMonthYear(Long metricValueId, Integer year, Integer month, BigDecimal newPlan, BigDecimal newFact);
 
     //обновление планового значения показателя с поиском по названию показателя, году и месяцу
     public void patchPlanByMetricNameMonthYear(String metricName, Integer year, Integer month, BigDecimal newPlan);

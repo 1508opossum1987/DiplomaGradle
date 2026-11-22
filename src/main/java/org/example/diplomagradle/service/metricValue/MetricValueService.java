@@ -6,6 +6,7 @@ import org.example.diplomagradle.datamodel.repository.MetricValueRepository;
 import org.example.diplomagradle.service.metric.InvalidMetricNameException;
 import org.example.diplomagradle.service.metric.MetricRestrictionValidatorInterface;
 import org.example.diplomagradle.service.metric.MetricServiceInterface;
+import org.example.diplomagradle.service.user.CurrentUserProvider;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -20,12 +21,16 @@ public class MetricValueService implements MetricValueServiceInterface{
 
     private final MetricRestrictionValidatorInterface metricRestrictionValidator;
 
+    private final CurrentUserProvider currentUserProvider;
+
     public MetricValueService (MetricValueRepository metricValueRepository,
                                MetricServiceInterface metricServiceInterface,
-                               MetricRestrictionValidatorInterface metricRestrictionValidator) {
+                               MetricRestrictionValidatorInterface metricRestrictionValidator,
+                               CurrentUserProvider currentUserProvider) {
         this.metricValueRepository = metricValueRepository;
         this.metricServiceInterface = metricServiceInterface;
         this.metricRestrictionValidator = metricRestrictionValidator;
+        this.currentUserProvider = currentUserProvider;
     }
 
     //добавить запись всех значений показателя по id Metric
@@ -49,7 +54,7 @@ public class MetricValueService implements MetricValueServiceInterface{
         metricValue.setPlan(values.plan());
         metricValue.setFact(values.fact());
         metricValue.setUpdatedAt(LocalDateTime.now());
-        metricValue.setUpdatedBy(values.updatedBy());
+        metricValue.setUpdatedBy(currentUserProvider.getCurrentUserName());
 
         metricValueRepository.save(metricValue);
     }
@@ -115,7 +120,7 @@ public class MetricValueService implements MetricValueServiceInterface{
     //обновление всех значений показателя с поиском по названию показателя, году и месяцу
     @Override
     public void putAllMetricValuesByMetricNameMonthYear(String metricName, Integer year, Integer month,
-                                                        BigDecimal newPlan, BigDecimal newFact, String updatedBy) {
+                                                        BigDecimal newPlan, BigDecimal newFact) {
         if (metricName == null || metricName.trim().isEmpty()) {
             throw new InvalidMetricNameException(metricName);
         }
@@ -127,9 +132,6 @@ public class MetricValueService implements MetricValueServiceInterface{
         }
         if (newPlan == null || newFact == null) {
             throw new InvalidMetricValueValuesException("plan or fact is null");
-        }
-        if (updatedBy == null || updatedBy.trim().isEmpty()) {
-            throw new InvalidMetricValueValuesException("updatedBy is null or empty");
         }
 
         Metric metric = metricServiceInterface.getMetricByName(metricName);
@@ -145,7 +147,7 @@ public class MetricValueService implements MetricValueServiceInterface{
         metricValue.setYear(year);
         metricValue.setPlan(newPlan);
         metricValue.setFact(newFact);
-        metricValue.setUpdatedBy(updatedBy);
+        metricValue.setUpdatedBy(currentUserProvider.getCurrentUserName());
         metricValue.setUpdatedAt(LocalDateTime.now());
 
         metricValueRepository.save(metricValue);
@@ -154,7 +156,7 @@ public class MetricValueService implements MetricValueServiceInterface{
     //обновление всех значений показателя с поиском по id записи, году и месяцу
     @Override
     public void putAllMetricValuesByMetricValueIdMonthYear(Long metricValueId, Integer year, Integer month,
-                                                           BigDecimal newPlan, BigDecimal newFact, String updatedBy) {
+                                                           BigDecimal newPlan, BigDecimal newFact) {
         if (metricValueId == null || metricValueId <= 0) {
             throw new InvalidIdMetricValueException(metricValueId);
         }
@@ -166,9 +168,6 @@ public class MetricValueService implements MetricValueServiceInterface{
         }
         if (newPlan == null || newFact == null) {
             throw new InvalidMetricValueValuesException("plan or fact is null");
-        }
-        if (updatedBy == null || updatedBy.trim().isEmpty()) {
-            throw new InvalidMetricValueValuesException("updatedBy is null or empty");
         }
 
         MetricValue metricValue = metricValueRepository.findById(metricValueId)
@@ -189,7 +188,7 @@ public class MetricValueService implements MetricValueServiceInterface{
         metricValue.setYear(year);
         metricValue.setPlan(newPlan);
         metricValue.setFact(newFact);
-        metricValue.setUpdatedBy(updatedBy);
+        metricValue.setUpdatedBy(currentUserProvider.getCurrentUserName());
         metricValue.setUpdatedAt(LocalDateTime.now());
 
         metricValueRepository.save(metricValue);
@@ -220,6 +219,8 @@ public class MetricValueService implements MetricValueServiceInterface{
 
         metricValue.setPlan(newPlan);
         metricValue.setUpdatedAt(LocalDateTime.now());
+        metricValue.setUpdatedBy(currentUserProvider.getCurrentUserName());
+
         metricValueRepository.save(metricValue);
     }
 
@@ -248,6 +249,8 @@ public class MetricValueService implements MetricValueServiceInterface{
 
         metricValue.setFact(newFact);
         metricValue.setUpdatedAt(LocalDateTime.now());
+        metricValue.setUpdatedBy(currentUserProvider.getCurrentUserName());
+
         metricValueRepository.save(metricValue);
     }
 
@@ -284,6 +287,7 @@ public class MetricValueService implements MetricValueServiceInterface{
         metricValue.setPlan(newPlan);
         metricValue.setFact(newFact);
         metricValue.setUpdatedAt(LocalDateTime.now());
+        metricValue.setUpdatedBy(currentUserProvider.getCurrentUserName());
 
         metricValueRepository.save(metricValue);
     }
