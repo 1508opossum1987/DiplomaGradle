@@ -1,6 +1,8 @@
 package org.example.diplomagradle;
 
 import org.example.diplomagradle.datamodel.repository.*;
+import org.example.diplomagradle.security.AccessChecker;
+import org.example.diplomagradle.security.AccessCheckerInterface;
 import org.example.diplomagradle.service.block.BlockService;
 import org.example.diplomagradle.service.block.BlockServiceInterface;
 import org.example.diplomagradle.service.metric.MetricRestrictionValidator;
@@ -54,9 +56,10 @@ public class ConfigurationClass {
     public MetricValueServiceInterface metricValueService(MetricValueRepository metricValueRepository,
                                                           MetricServiceInterface metricServiceInterface,
                                                           MetricRestrictionValidatorInterface metricRestrictionValidatorInterface,
-                                                          CurrentUserProvider currentUserProvider) {
+                                                          CurrentUserProvider currentUserProvider,
+                                                          AccessCheckerInterface accessCheckerInterface) {
         return new MetricValueService(metricValueRepository, metricServiceInterface,
-                metricRestrictionValidatorInterface, currentUserProvider);
+                metricRestrictionValidatorInterface, currentUserProvider, accessCheckerInterface);
     }
 
     @Bean
@@ -130,5 +133,15 @@ public class ConfigurationClass {
     @Bean
     public CurrentUserProvider currentUserProvider() {
         return new CurrentUserProvider();
+    }
+
+    //добавление в зависимость бина для проверки доступа к функциям
+    @Bean
+    public AccessCheckerInterface accessChecker(MetricAccessRepository metricAccessRepository,
+                                                BlockViewRepository blockViewRepository,
+                                                MetricValueRepository metricValueRepository,
+                                                MetricRepository metricRepository) {
+        return new AccessChecker(metricAccessRepository, blockViewRepository,
+                metricValueRepository, metricRepository);
     }
 }

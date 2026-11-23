@@ -2,8 +2,13 @@ package org.example.diplomagradle.api.blockApi;
 
 import org.example.diplomagradle.api.messages.StringMessage;
 import org.example.diplomagradle.datamodel.entity.Block;
+import org.example.diplomagradle.security.AccessCheckerInterface;
 import org.example.diplomagradle.service.block.BlockServiceInterface;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,8 +18,12 @@ import java.util.List;
 public class BlockApiController {
     private final BlockServiceInterface blockServiceInterface;
 
-    public BlockApiController (BlockServiceInterface blockServiceInterface){
+    private final AccessCheckerInterface accessCheckerInterface;
+
+    public BlockApiController (BlockServiceInterface blockServiceInterface,
+                               AccessCheckerInterface accessCheckerInterface){
         this.blockServiceInterface = blockServiceInterface;
+        this.accessCheckerInterface = accessCheckerInterface;
     }
 
     //добавление блока показателей
@@ -28,11 +37,15 @@ public class BlockApiController {
     //получение всех блоков показателей
     @GetMapping
     public List<Block> getAllBlocksApi(){
-        return blockServiceInterface.getAllBlocks();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return blockServiceInterface.getAllBlocks().stream()
+                .filter(block -> accessCheckerInterface.canViewBlock(auth, block.getId()))
+                .toList();
     }
 
     //получение блока по id
     @GetMapping("/id/{id}")
+    @PreAuthorize("@accessChecker.canViewBlock(authentication, #id)")
     public Block getBlockByIdApi(@PathVariable Long id){
         return blockServiceInterface.getBlockById(id);
     }
@@ -54,7 +67,12 @@ public class BlockApiController {
     //получение блока по title
     @GetMapping("/title/{title}")
     public Block getBlockByTitleApi(@PathVariable String title){
-        return blockServiceInterface.getBlockByTitle(title);
+        Block block = blockServiceInterface.getBlockByTitle(title);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!accessCheckerInterface.canViewBlock(auth, block.getId())) {
+            throw new AccessDeniedException("You haven't access!");
+        }
+        return block;
     }
 
 }

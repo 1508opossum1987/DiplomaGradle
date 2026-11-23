@@ -1,6 +1,7 @@
 package org.example.diplomagradle.service.metric;
 
 import org.example.diplomagradle.datamodel.entity.Metric;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
@@ -19,9 +20,11 @@ public interface MetricServiceInterface {
     public Metric getMetricByName(String name);
 
     //удалить показатель по номеру (id)
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteMetricById(Long id);
 
     //удалить все показатели
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteAllMetrics();
 
     //изменить название показателя по названию

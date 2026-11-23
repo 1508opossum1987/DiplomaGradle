@@ -1,5 +1,6 @@
 package org.example.diplomagradle.datamodel.entity.users;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 //сущность пользователей
@@ -15,6 +16,7 @@ public class User {
     private String username;
 
     //пароль
+    @JsonIgnore
     @Column(name = "f_password", nullable = false)
     private String password;
 

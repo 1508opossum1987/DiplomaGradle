@@ -1,6 +1,7 @@
 package org.example.diplomagradle.service.block;
 
 import org.example.diplomagradle.datamodel.entity.Block;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,9 +18,11 @@ public interface BlockServiceInterface {
     public Block getBlockById(Long id);
 
     //удалить блок по номеру (id)
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteBlockById(Long id);
 
     //удалить все блоки
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteAllBlocks();
 
     //получить блок по title

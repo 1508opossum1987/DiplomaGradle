@@ -1,6 +1,7 @@
 package org.example.diplomagradle.service.role;
 
 import org.example.diplomagradle.datamodel.entity.users.Role;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
@@ -16,5 +17,6 @@ public interface RoleServiceInterface {
     public void addNewRole(String name);
 
     //удалить роль
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteRoleByName(String name);
 }

@@ -3,13 +3,17 @@ package org.example.diplomagradle.service.metricValue;
 import org.example.diplomagradle.datamodel.entity.Metric;
 import org.example.diplomagradle.datamodel.entity.MetricValue;
 import org.example.diplomagradle.datamodel.repository.MetricValueRepository;
+import org.example.diplomagradle.security.AccessCheckerInterface;
 import org.example.diplomagradle.service.metric.InvalidMetricNameException;
 import org.example.diplomagradle.service.metric.MetricRestrictionValidatorInterface;
 import org.example.diplomagradle.service.metric.MetricServiceInterface;
 import org.example.diplomagradle.service.user.CurrentUserProvider;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import org.springframework.security.access.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,14 +27,18 @@ public class MetricValueService implements MetricValueServiceInterface{
 
     private final CurrentUserProvider currentUserProvider;
 
+    private final AccessCheckerInterface accessCheckerInterface;
+
     public MetricValueService (MetricValueRepository metricValueRepository,
                                MetricServiceInterface metricServiceInterface,
                                MetricRestrictionValidatorInterface metricRestrictionValidator,
-                               CurrentUserProvider currentUserProvider) {
+                               CurrentUserProvider currentUserProvider,
+                               AccessCheckerInterface accessCheckerInterface) {
         this.metricValueRepository = metricValueRepository;
         this.metricServiceInterface = metricServiceInterface;
         this.metricRestrictionValidator = metricRestrictionValidator;
         this.currentUserProvider = currentUserProvider;
+        this.accessCheckerInterface = accessCheckerInterface;
     }
 
     //добавить запись всех значений показателя по id Metric
@@ -136,6 +144,12 @@ public class MetricValueService implements MetricValueServiceInterface{
 
         Metric metric = metricServiceInterface.getMetricByName(metricName);
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if(!accessCheckerInterface.canEditByMetricId(auth, metric.getId())){
+            throw new AccessDeniedException("You haven't access!");
+        }
+
         metricRestrictionValidator.validate(metric, newPlan, newFact);
 
         MetricValue metricValue = metricValueRepository
@@ -211,6 +225,13 @@ public class MetricValueService implements MetricValueServiceInterface{
         }
 
         Metric metric = metricServiceInterface.getMetricByName(metricName);
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if(!accessCheckerInterface.canEditByMetricId(auth, metric.getId())){
+            throw new AccessDeniedException("You haven't access!");
+        }
+
         MetricValue metricValue = metricValueRepository
                 .findByMetricIdAndMonthAndYear(metric.getId(), month, year)
                 .orElseThrow(() -> new EmptyMetricValuesException(metricName, month, year));
@@ -241,6 +262,13 @@ public class MetricValueService implements MetricValueServiceInterface{
         }
 
         Metric metric = metricServiceInterface.getMetricByName(metricName);
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if(!accessCheckerInterface.canEditByMetricId(auth, metric.getId())){
+            throw new AccessDeniedException("You haven't access!");
+        }
+
         MetricValue metricValue = metricValueRepository
                 .findByMetricIdAndMonthAndYear(metric.getId(), month, year)
                 .orElseThrow(() -> new EmptyMetricValuesException(metricName, month, year));

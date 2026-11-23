@@ -2,9 +2,14 @@ package org.example.diplomagradle.api.metricApi;
 
 import org.example.diplomagradle.api.messages.StringMessage;
 import org.example.diplomagradle.datamodel.entity.Metric;
+import org.example.diplomagradle.security.AccessCheckerInterface;
 import org.example.diplomagradle.service.metric.MetricServiceInterface;
 import org.example.diplomagradle.service.metric.MetricValues;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,8 +19,12 @@ import java.util.List;
 public class MetricApiController {
     private final MetricServiceInterface metricServiceInterface;
 
-    public MetricApiController(MetricServiceInterface metricServiceInterface) {
+    private final AccessCheckerInterface accessCheckerInterface;
+
+    public MetricApiController(MetricServiceInterface metricServiceInterface,
+                               AccessCheckerInterface accessCheckerInterface) {
         this.metricServiceInterface = metricServiceInterface;
+        this.accessCheckerInterface = accessCheckerInterface;
     }
 
     //добавление показателей
@@ -29,11 +38,15 @@ public class MetricApiController {
     //получение всех покзателей
     @GetMapping
     public List<Metric> getAllMetricsApi() {
-        return metricServiceInterface.getAllMetrics();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return metricServiceInterface.getAllMetrics().stream()
+                .filter(metric -> accessCheckerInterface.canViewMetric(auth, metric.getId()))
+                .toList();
     }
 
     //получение показателя по id
     @GetMapping("/id/{id}")
+    @PreAuthorize("@accessChecker.canViewMetric(authentication, #id)")
     public Metric getMetricByIdApi(@PathVariable Long id) {
         return metricServiceInterface.getMetricById(id);
     }
@@ -41,7 +54,12 @@ public class MetricApiController {
     //получение показателя по названию
     @GetMapping("/name/{name}")
     public Metric getMetricByNameApi(@PathVariable String name) {
-        return metricServiceInterface.getMetricByName(name);
+        Metric metric = metricServiceInterface.getMetricByName(name);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!accessCheckerInterface.canViewMetric(auth, metric.getId())) {
+            throw new AccessDeniedException("You haven't access!");
+        }
+        return metric;
     }
 
     //удаление показателя по id

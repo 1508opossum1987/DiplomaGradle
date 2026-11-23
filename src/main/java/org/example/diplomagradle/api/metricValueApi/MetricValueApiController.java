@@ -2,9 +2,14 @@ package org.example.diplomagradle.api.metricValueApi;
 
 import org.example.diplomagradle.api.messages.StringMessage;
 import org.example.diplomagradle.datamodel.entity.MetricValue;
+import org.example.diplomagradle.security.AccessCheckerInterface;
 import org.example.diplomagradle.service.metricValue.MetricValueServiceInterface;
 import org.example.diplomagradle.service.metricValue.MetricValueValues;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -15,8 +20,12 @@ import java.util.List;
 public class MetricValueApiController {
     private final MetricValueServiceInterface metricValueServiceInterface;
 
-    public MetricValueApiController(MetricValueServiceInterface metricValueServiceInterface){
+    private final AccessCheckerInterface accessCheckerInterface;
+
+    public MetricValueApiController(MetricValueServiceInterface metricValueServiceInterface,
+                                    AccessCheckerInterface accessCheckerInterface){
         this.metricValueServiceInterface = metricValueServiceInterface;
+        this.accessCheckerInterface = accessCheckerInterface;
     }
 
     //добавление записи всех значений показателя по id Metric
@@ -28,20 +37,25 @@ public class MetricValueApiController {
         return (new StringMessage("Success"));
     }
 
-    //получение всех записей значений показателей
+    //получение всех записей значений показателей (только по доступным метрикам)
     @GetMapping
     public List<MetricValue> getAllMetricValuesApi(){
-        return metricValueServiceInterface.getAllMetricValues();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return metricValueServiceInterface.getAllMetricValues().stream()
+                .filter(mv -> accessCheckerInterface.canViewMetric(auth, mv.getMetric().getId()))
+                .toList();
     }
 
     //получение таблицы всех значений показателей по id записи MetricValue
     @GetMapping ("/metric-value-id/{metricValueId}")
+    @PreAuthorize("@accessChecker.canEditByMetricValueId(authentication, #metricValueId)")
     public List<MetricValue> getAllMetricValuesByIdMetricValueApi(@PathVariable Long metricValueId){
         return metricValueServiceInterface.getAllMetricValuesByIdMetricValue(metricValueId);
     }
 
     //получение списка значений показателей по id показателя
     @GetMapping ("/metric-id/{idMetric}")
+    @PreAuthorize("@accessChecker.canViewMetric(authentication, #idMetric)")
     public List<MetricValue> getAllMetricValuesByMetricIdApi(@PathVariable Long idMetric){
         return metricValueServiceInterface.getAllMetricValuesByMetricId(idMetric);
     }
@@ -49,7 +63,16 @@ public class MetricValueApiController {
     //получение списка значений показателей по названию показателя
     @GetMapping ("/metric-name/{metricName}")
     public List<MetricValue> getAllMetricValuesByMetricNameApi(@PathVariable String metricName){
-        return metricValueServiceInterface.getAllMetricValuesByMetricName(metricName);
+        List<MetricValue> values = metricValueServiceInterface.getAllMetricValuesByMetricName(metricName);
+        if (values.isEmpty()) {
+            return values;
+        }
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Long metricId = values.getFirst().getMetric().getId();
+        if (!accessCheckerInterface.canViewMetric(auth, metricId)) {
+            throw new AccessDeniedException("You haven't access!");
+        }
+        return values;
     }
 
     //удаление всех значений показателя по id самого показателя Metric
@@ -69,7 +92,7 @@ public class MetricValueApiController {
     //обновление всех значений показателя с поиском по названию показателя, году и месяцу
     @PutMapping ("/metric-name/{metricName}")
     public StringMessage putAllMetricValuesByMetricNameMonthYearApi(@PathVariable String metricName, @RequestParam Integer year, @RequestParam Integer month,
-                                                           @RequestParam BigDecimal newPlan, @RequestParam BigDecimal newFact){
+                                                                    @RequestParam BigDecimal newPlan, @RequestParam BigDecimal newFact){
         metricValueServiceInterface.putAllMetricValuesByMetricNameMonthYear(metricName, year,
                 month, newPlan, newFact);
         return (new StringMessage("Success"));
@@ -78,9 +101,9 @@ public class MetricValueApiController {
     //обновление всех значений показателя с поиском по id записи, году и месяцу
     @PutMapping("/metric-value-id/{metricValueId}")
     public StringMessage putAllMetricValuesByMetricValueIdMonthYearApi(@PathVariable Long metricValueId, @RequestParam Integer year, @RequestParam Integer month,
-                                                              @RequestParam BigDecimal newPlan, @RequestParam BigDecimal newFact){
+                                                                       @RequestParam BigDecimal newPlan, @RequestParam BigDecimal newFact){
         metricValueServiceInterface.putAllMetricValuesByMetricValueIdMonthYear(metricValueId, year, month,
-        newPlan, newFact);
+                newPlan, newFact);
         return (new StringMessage("Success"));
     }
 

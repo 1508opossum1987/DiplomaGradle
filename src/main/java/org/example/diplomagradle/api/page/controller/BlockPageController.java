@@ -2,6 +2,7 @@ package org.example.diplomagradle.api.page.controller;
 
 import org.example.diplomagradle.api.page.dto.BlockPageDto;
 import org.example.diplomagradle.service.page.PageServiceInterface;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ public class BlockPageController {
     }
 
     @GetMapping("/block/{blockId}")
+    @PreAuthorize("@accessChecker.canViewBlock(authentication, #blockId)")
     public String blockPage(@PathVariable Long blockId,
                             @RequestParam(required = false) Integer year,
                             @RequestParam(required = false) Integer month,

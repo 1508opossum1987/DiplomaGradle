@@ -25,7 +25,7 @@ public class RoleApi {
 
     //получить роль по названию
     @GetMapping("/{name}")
-    public Role getRoleByNameApi(String name){
+    public Role getRoleByNameApi(@PathVariable String name){
         return roleServiceInterface.getRoleByName(name);
     }
 

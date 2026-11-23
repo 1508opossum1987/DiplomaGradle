@@ -6,6 +6,7 @@ import org.example.diplomagradle.datamodel.entity.Metric;
 import org.example.diplomagradle.service.metric.MetricServiceInterface;
 import org.example.diplomagradle.service.metricValue.MetricValueServiceInterface;
 import org.example.diplomagradle.service.page.PageServiceInterface;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +34,7 @@ public class MetricPageController {
     }
 
     @GetMapping("/metric/{metricId}")
+    @PreAuthorize("@accessChecker.canViewMetric(authentication, #metricId)")
     public String metricPage(@PathVariable Long metricId, Model model) {
         List<MetricValuePageDto> values = pageServiceInterface.getMetricValues(metricId);
 
@@ -45,6 +47,7 @@ public class MetricPageController {
     }
 
     @GetMapping("/metric/{metricId}/edit/{valueId}")
+    @PreAuthorize("@accessChecker.canEditByMetricValueId(authentication, #valueId)")
     public String editMetricValuePage(@PathVariable Long metricId,
                                       @PathVariable Long valueId,
                                       Model model) {
