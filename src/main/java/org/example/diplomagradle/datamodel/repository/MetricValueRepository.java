@@ -13,4 +13,5 @@ public interface MetricValueRepository extends JpaRepository<MetricValue, Long> 
     List<MetricValue> findByMetricId(Long metricId);
     void deleteByMetricId(Long metricId);
     Optional<MetricValue> findByMetricIdAndMonthAndYear(Long metricId, Integer month, Integer year);
+    List<MetricValue> findByMetricIdOrderByYearDescMonthDesc(Long metricId);
 }

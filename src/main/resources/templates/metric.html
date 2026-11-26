@@ -12,7 +12,16 @@
     <h1 class="mb-4" th:text="${metric.metricName} + ' (' + ${metric.unit} + ')'">Травматизм (случай)</h1>
 
 
-    <table class="table table-striped">
+    <table class="table table-striped table-fixed">
+        <colgroup>
+            <col style="width: 70px;">
+            <col style="width: 70px;">
+            <col style="width: 110px;">
+            <col style="width: 110px;">
+            <col style="width: 160px;">
+            <col style="width: 160px;">
+            <col style="width: 150px;">
+        </colgroup>
         <thead>
         <tr>
             <th>Год</th>
@@ -21,14 +30,15 @@
             <th class="text-end">Факт</th>
             <th>Кто изменил</th>
             <th>Когда</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="value : ${values}">
             <td th:text="${value.year()}">2026</td>
             <td th:text="${value.month()}">10</td>
-            <td class="text-end" th:text="${value.plan() != null ? value.plan() : '—'}">0.0</td>
-            <td class="text-end" th:text="${value.fact() != null ? value.fact() : '—'}">0.0</td>
+            <td class="num-cell" th:text="${value.plan() != null ? #numbers.formatDecimal(value.plan(), 1, 1) : '—'}">0.0</td>
+            <td class="num-cell" th:text="${value.fact() != null ? #numbers.formatDecimal(value.fact(), 1, 1) : '—'}">0.0</td>
             <td th:text="${value.updatedBy() != null ? value.updatedBy() : '—'}">system</td>
             <td th:text="${value.updatedAt()}">01:10:2026 12:00</td>
             <td class="text-end">
@@ -43,7 +53,6 @@
         </tr>
         </tbody>
     </table>
-
 </div>
 
 <div th:replace="~{fragments/layout :: footer}"></div>

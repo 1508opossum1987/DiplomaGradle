@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Админка')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+
+    <a th:href="@{/}" class="btn btn-link mb-2">← На главную</a>
+
+    <h1 class="mb-4">Админка</h1>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Управление показателями</h5>
+                    <p class="card-text text-muted">
+                        Блоки, метрики, значения показателей.
+                    </p>
+                    <a th:href="@{/admin/info-center}" class="btn btn-primary">
+                        Перейти
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Управление пользователями</h5>
+                    <p class="card-text text-muted">
+                        Создание, редактирование, блокировка пользователей.
+                    </p>
+                    <a th:href="@{/admin/users}" class="btn btn-primary">
+                        Перейти
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

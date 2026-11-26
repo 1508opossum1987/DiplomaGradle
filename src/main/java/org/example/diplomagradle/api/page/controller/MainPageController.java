@@ -24,6 +24,11 @@ public class MainPageController {
         this.accessCheckerInterface = accessCheckerInterface;
     }
 
+    @GetMapping("/access-denied")
+    public String accessDenied() {
+        return "error/403";
+    }
+
     @GetMapping("/")
     public String mainPage(@RequestParam(required = false) Integer year,
                            @RequestParam(required = false) Integer month,

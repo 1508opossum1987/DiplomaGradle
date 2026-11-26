@@ -106,7 +106,7 @@ public class PageService implements PageServiceInterface {
 
     @Override
     public List<MetricValuePageDto> getMetricValues(Long metricId) {
-        List<MetricValue> values = metricValueRepository.findByMetricId(metricId);
+        List<MetricValue> values = metricValueRepository.findByMetricIdOrderByYearDescMonthDesc(metricId);
         List<MetricValuePageDto> result = new ArrayList<>();
 
         for (MetricValue value : values) {

@@ -24,7 +24,12 @@ public class Block {
     @JsonIgnore
     private Set<Metric> metrics;
 
-    public Block() {}
+    public Block() {
+    }
+
+    public Block(Long id) {
+        this.id = id;
+    }
 
     public Long getId() {
         return id;

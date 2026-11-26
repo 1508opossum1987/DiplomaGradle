@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Редактирование значения')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+
+    <a th:href="@{/admin/info-center/metric/{id}/values(id=${metric.id})}" class="btn btn-link mb-2">← Назад</a>
+
+    <h1 class="mb-4">
+        Редактирование значения «<span th:text="${metric.metricName}">Травматизм</span>»
+    </h1>
+
+    <form th:action="@{/admin/info-center/metric/{mid}/values/{vid}/edit(mid=${metric.id}, vid=${value.id})}" method="post">
+        <div class="mb-3">
+            <label class="form-label">Год</label>
+            <input type="number" name="year" class="form-control" min="2024"
+                   th:value="${value.year}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Месяц</label>
+            <input type="number" name="month" class="form-control" min="1" max="12"
+                   th:value="${value.month}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">План</label>
+            <input type="number" step="0.1" name="plan" class="form-control"
+                   th:value="${value.plan}">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Факт</label>
+            <input type="number" step="0.1" name="fact" class="form-control"
+                   th:value="${value.fact}">
+        </div>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+
+</div>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Страница не найдена')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+<div class="container">
+    <div class="card mx-auto mt-5" style="max-width: 560px;">
+        <div class="card-body text-center">
+            <h1 class="display-6">404</h1>
+            <p class="lead">Страница не найдена</p>
+            <p class="text-muted" th:text="${message} ?: 'Запрашиваемая страница не найдена'"></p>
+            <a th:href="@{/}" class="btn btn-primary">На главную</a>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

@@ -1,9 +1,10 @@
 package org.example.diplomagradle.security;
 
-import org.example.diplomagradle.datamodel.repository.BlockViewRepository;
-import org.example.diplomagradle.datamodel.repository.MetricAccessRepository;
-import org.example.diplomagradle.datamodel.repository.MetricRepository;
-import org.example.diplomagradle.datamodel.repository.MetricValueRepository;
+import jakarta.persistence.EntityNotFoundException;
+import org.example.diplomagradle.datamodel.repository.*;
+import org.example.diplomagradle.service.block.InvalidIdBlockException;
+import org.example.diplomagradle.service.metric.InvalidIdMetricException;
+import org.example.diplomagradle.service.metricValue.InvalidIdMetricValueException;
 import org.example.diplomagradle.service.user.detail.AppUserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,16 +19,20 @@ public class AccessChecker implements AccessCheckerInterface{
 
     private final MetricRepository metricRepository;
 
+    private final BlockRepository blockRepository;
+
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
 
     public AccessChecker(MetricAccessRepository metricAccessRepository,
                          BlockViewRepository blockViewRepository,
                          MetricValueRepository metricValueRepository,
-                         MetricRepository metricRepository) {
+                         MetricRepository metricRepository,
+                         BlockRepository blockRepository) {
         this.metricAccessRepository = metricAccessRepository;
         this.blockViewRepository = blockViewRepository;
         this.metricValueRepository = metricValueRepository;
         this.metricRepository = metricRepository;
+        this.blockRepository = blockRepository;
     }
 
     //проверка прав доступа к показателям
@@ -36,14 +41,21 @@ public class AccessChecker implements AccessCheckerInterface{
             return false;
         }
 
+        if (!metricRepository.existsById(metricId)) {
+            throw new InvalidIdMetricException(metricId);
+        }
+
         if (isAdmin(auth)) {
             return true;
         }
 
         if (auth.getPrincipal() instanceof AppUserDetails details) {
             Long roleId = details.getUser().getRole().getId();
-            return roleId != null
-                    && metricAccessRepository.existsByRole_IdAndMetric_Id(roleId, metricId);
+            if (roleId == null) {
+                return false;
+            }
+
+            return metricAccessRepository.existsByRole_IdAndMetric_Id(roleId, metricId);
         }
 
         return false;
@@ -74,7 +86,7 @@ public class AccessChecker implements AccessCheckerInterface{
             return metricValueRepository.findById(metricValueId)
                     .map(mv -> metricAccessRepository
                     .existsByRole_IdAndMetric_Id(roleId, mv.getMetric().getId()))
-                    .orElse(false);
+                    .orElseThrow(() -> new InvalidIdMetricValueException(metricValueId));
         }
         return false;
     }
@@ -96,6 +108,9 @@ public class AccessChecker implements AccessCheckerInterface{
                 return false;
             }
 
+            if (!blockRepository.existsById(blockId)) {
+                throw new InvalidIdBlockException(blockId);
+            }
             return blockViewRepository.existsByRole_IdAndBlock_Id(roleId, blockId);
         }
         return false;
@@ -117,7 +132,7 @@ public class AccessChecker implements AccessCheckerInterface{
             return metricRepository.findById(metricId)
                     .map(metric -> blockViewRepository
                             .existsByRole_IdAndBlock_Id(roleId, metric.getBlock().getId()))
-                    .orElse(false);
+                    .orElseThrow(() -> new InvalidIdMetricException(metricId));
         }
         return false;
     }

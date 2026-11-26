@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Новый показатель')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+
+    <a th:href="@{/admin/info-center}" class="btn btn-link mb-2">← Назад</a>
+
+    <h1 class="mb-4">
+        Новый показатель в блоке «<span th:text="${block.title}">Безопасность</span>»
+    </h1>
+
+    <form th:action="@{/admin/info-center/block/{id}/metric(id=${block.id})}" method="post">
+        <div class="mb-3">
+            <label class="form-label">Название</label>
+            <input type="text" name="metricName" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Единица измерения</label>
+            <input type="text" name="unit" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Тип</label>
+            <select name="type" class="form-select" required>
+                <option th:each="t : ${types}" th:value="${t}" th:text="${t}"></option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Min (необязательно)</label>
+            <input type="number" step="0.1" name="minValue" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Max (необязательно)</label>
+            <input type="number" step="0.1" name="maxValue" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Создать</button>
+    </form>
+
+</div>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

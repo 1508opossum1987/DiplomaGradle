@@ -5,10 +5,11 @@ import org.example.diplomagradle.service.metric.InvalidMetricNameException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "org.example.diplomagradle.api.metricValueApi")
 public class MetricValueExceptionHandler {
     @ExceptionHandler(InvalidIdMetricException.class)
     public ResponseEntity<String> handleInvalidIdMetric(InvalidIdMetricException ex) {
@@ -49,5 +50,10 @@ public class MetricValueExceptionHandler {
     public ResponseEntity<String> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body("Data integrity violation: " + ex.getMostSpecificCause().getMessage());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<String> handleAccessDenied(AccessDeniedException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
     }
 }

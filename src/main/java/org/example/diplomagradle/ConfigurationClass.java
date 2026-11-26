@@ -140,8 +140,9 @@ public class ConfigurationClass {
     public AccessCheckerInterface accessChecker(MetricAccessRepository metricAccessRepository,
                                                 BlockViewRepository blockViewRepository,
                                                 MetricValueRepository metricValueRepository,
-                                                MetricRepository metricRepository) {
+                                                MetricRepository metricRepository,
+                                                BlockRepository blockRepository) {
         return new AccessChecker(metricAccessRepository, blockViewRepository,
-                metricValueRepository, metricRepository);
+                metricValueRepository, metricRepository, blockRepository);
     }
 }

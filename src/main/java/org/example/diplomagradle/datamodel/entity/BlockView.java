@@ -9,6 +9,7 @@ import org.example.diplomagradle.datamodel.entity.users.Role;
 public class BlockView {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "f_id")
     private Long id;
 
     //связь с ролью

@@ -16,3 +16,21 @@
     background-color: rgba(255, 255, 255, 0.9);
     color: #212529;
 }
+
+.table-fixed {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.table-fixed th,
+.table-fixed td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.num-cell {
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}

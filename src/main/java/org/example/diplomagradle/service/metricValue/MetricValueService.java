@@ -345,4 +345,14 @@ public class MetricValueService implements MetricValueServiceInterface{
 //        }
 //    }
 
+    //удалить одно значение метрики по id
+    public void deleteMetricValueById(Long valueId) {
+        if (valueId == null || valueId <= 0) {
+            throw new InvalidIdMetricValueException(valueId);
+        }
+        MetricValue value = metricValueRepository.findById(valueId)
+                .orElseThrow(() -> new InvalidIdMetricValueException(valueId));
+        metricValueRepository.delete(value);
+    }
+
 }

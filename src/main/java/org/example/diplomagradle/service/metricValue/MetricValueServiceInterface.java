@@ -53,4 +53,6 @@ public interface MetricValueServiceInterface {
     @PreAuthorize("@accessChecker.canEditByMetricValueId(authentication, #metricValueId)")
     public void patchPlanFactByMetricValueIdMonthYear(Long metricValueId, Integer year, Integer month, BigDecimal newPlan, BigDecimal newFact);
 
+    //удалить ОДНО значение метрики по id
+    public void deleteMetricValueById(Long valueId);
 }

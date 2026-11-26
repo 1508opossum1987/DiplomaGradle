@@ -28,7 +28,14 @@
         </div>
     </form>
 
-    <table class="table table-striped">
+    <table class="table table-striped table-fixed">
+        <colgroup>
+            <col style="width: 45%;">
+            <col style="width: 120px;">
+            <col style="width: 130px;">
+            <col style="width: 130px;">
+            <col style="width: 130px;">
+        </colgroup>
         <thead>
         <tr>
             <th>Показатель</th>
@@ -42,8 +49,8 @@
         <tr th:each="metric : ${block.metrics()}">
             <td th:text="${metric.name()}">Травматизм</td>
             <td th:text="${metric.unit()}">случай</td>
-            <td class="text-end" th:text="${metric.plan() != null ? metric.plan() : '—'}">0.0</td>
-            <td class="text-end" th:text="${metric.fact() != null ? metric.fact() : '—'}">0.0</td>
+            <td class="num-cell" th:text="${metric.plan() != null ? #numbers.formatDecimal(metric.plan(), 1, 1) : '—'}">0.0</td>
+            <td class="num-cell" th:text="${metric.fact() != null ? #numbers.formatDecimal(metric.fact(), 1, 1) : '—'}">0.0</td>
             <td class="text-end">
                 <a class="btn btn-outline-primary btn-sm"
                    th:href="@{/metric/{id}(id=${metric.id()})}">Подробнее</a>

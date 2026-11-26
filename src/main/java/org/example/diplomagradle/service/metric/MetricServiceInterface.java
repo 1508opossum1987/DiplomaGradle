@@ -3,6 +3,7 @@ package org.example.diplomagradle.service.metric;
 import org.example.diplomagradle.datamodel.entity.Metric;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 //интерфейс для обработки задач с сущностью Metric
@@ -41,4 +42,7 @@ public interface MetricServiceInterface {
 
     //получить показатели по названию блока показателей Block
     public List<Metric> getMetricByTitleBlock(String blockTitle);
+
+    //установка макс мин значений метрик
+    public void patchMetricMinMaxById(Long id, BigDecimal minValue, BigDecimal maxValue);
 }

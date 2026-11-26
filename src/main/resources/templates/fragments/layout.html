@@ -14,10 +14,14 @@
     <div class="container">
         <a class="navbar-brand" th:href="@{/}">Инфоцентр предприятия</a>
 
-        <form th:action="@{/logout}" method="post" class="d-flex ms-auto"
-              sec:authorize="isAuthenticated()">
-            <button type="submit" class="btn btn-outline-light btn-sm">Выйти</button>
-        </form>
+        <div class="ms-auto d-flex align-items-center gap-3">
+            <a class="nav-link text-light" th:href="@{/admin}"
+               sec:authorize="hasRole('ADMIN')">Админка</a>
+            <form th:action="@{/logout}" method="post" class="d-flex"
+                  sec:authorize="isAuthenticated()">
+                <button type="submit" class="btn btn-outline-light btn-sm">Выйти</button>
+            </form>
+        </div>
     </div>
 </nav>
 

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Админка — показатели')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+
+    <a th:href="@{/admin}" class="btn btn-link mb-2">← В админку</a>
+
+    <h1 class="mb-4">Управление показателями</h1>
+
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Добавить блок</h5>
+            <form th:action="@{/admin/info-center/block}" method="post" class="row g-2">
+                <div class="col-auto">
+                    <input type="text" name="title" class="form-control"
+                           placeholder="Название блока" required>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Создать</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="block-card mb-3" th:each="row : ${blocks}"
+         th:classappend="${row.block.title == 'Безопасность' ? 'block-safety' :
+                          row.block.title == 'Качество' ? 'block-quality' :
+                          row.block.title == 'Производство' ? 'block-production' :
+                          row.block.title == 'Экономика' ? 'block-economy' :
+                          row.block.title == 'Корпоративная культура' ? 'block-culture' : 'block-default'}">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="mb-0" th:text="${row.block.title}">Безопасность</h3>
+            <div class="d-flex gap-2">
+                <a class="btn btn-sm btn-dark text-white"
+                   th:href="@{/admin/info-center/block/{id}/metric/new(id=${row.block.id})}">
+                    Добавить метрику
+                </a>
+                <form th:action="@{/admin/info-center/block/{id}/delete(id=${row.block.id})}"
+                      method="post" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-danger"
+                            onclick="return confirm('Удалить блок?')">Удалить блок</button>
+                </form>
+            </div>
+        </div>
+
+        <table class="table table-sm table-light mb-0 table-fixed">
+            <colgroup>
+                <col style="width: 50px;">
+                <col style="width: 30%;">
+                <col style="width: 100px;">
+                <col style="width: 100px;">
+                <col style="width: 90px;">
+                <col style="width: 90px;">
+                <col style="width: 280px;">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Название</th>
+                <th>Ед. изм.</th>
+                <th>Тип</th>
+                <th class="text-end">Min</th>
+                <th class="text-end">Max</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="metric : ${row.metrics}">
+                <td th:text="${metric.id}">1</td>
+                <td th:text="${metric.metricName}">Травматизм</td>
+                <td th:text="${metric.unit}">случай</td>
+                <td th:text="${metric.type}">MANUAL</td>
+                <td class="num-cell" th:text="${metric.minValue != null ? #numbers.formatDecimal(metric.minValue, 1, 1) : '—'}">0.0</td>
+                <td class="num-cell" th:text="${metric.maxValue != null ? #numbers.formatDecimal(metric.maxValue, 1, 1) : '—'}">2.0</td>
+                <td class="text-end">
+                    <a class="btn btn-sm btn-outline-secondary"
+                       th:href="@{/admin/info-center/metric/{id}/edit(id=${metric.id})}">
+                        Редактировать
+                    </a>
+                    <a class="btn btn-sm btn-outline-primary"
+                       th:href="@{/admin/info-center/metric/{id}/values(id=${metric.id})}">
+                        Значения
+                    </a>
+                    <form th:action="@{/admin/info-center/metric/{id}/delete(id=${metric.id})}"
+                          method="post" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                onclick="return confirm('Удалить показатель?')">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(row.metrics)}">
+                <td colspan="7" class="text-center text-muted">Метрик нет</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

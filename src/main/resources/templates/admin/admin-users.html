@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Админка — пользователи')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+
+    <a th:href="@{/admin}" class="btn btn-link mb-2">← В админку</a>
+
+    <h1 class="mb-4">Управление пользователями</h1>
+
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Добавить пользователя</h5>
+            <form th:action="@{/admin/users}" method="post">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Логин</label>
+                        <input type="text" name="username" class="form-control" required
+                               minlength="4" maxlength="20" pattern="[a-zA-Z0-9_.-]+"
+                               title="4–20 символов: буквы, цифры, _ . -">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Пароль</label>
+                        <input type="password" name="password" class="form-control" required
+                               minlength="4" maxlength="20"
+                               pattern="(?=.*[A-Za-z])(?=.*\d).{4,20}"
+                               title="4–20 символов, минимум одна латинская буква и одна цифра"
+                               autocomplete="new-password">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Имя</label>
+                        <input type="text" name="name" class="form-control" required
+                               minlength="4" maxlength="20">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" required
+                               maxlength="40">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Роль</label>
+                        <select name="roleName" class="form-select" required>
+                            <option th:each="role : ${roles}"
+                                    th:value="${role.name}"
+                                    th:text="${role.name}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Статус</label>
+                        <select name="enabled" class="form-select" required>
+                            <option value="true" selected>Активен</option>
+                            <option value="false">Заблокирован</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Создать</button>
+            </form>
+        </div>
+    </div>
+
+    <table class="table table-sm">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Логин</th>
+            <th>Имя</th>
+            <th>Email</th>
+            <th>Роль</th>
+            <th>Статус</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}">1</td>
+            <td th:text="${user.username}">admin</td>
+            <td th:text="${user.name}">Имя</td>
+            <td th:text="${user.email}">a@b.c</td>
+            <td th:text="${user.role.name}">ADMIN</td>
+            <td th:text="${user.enabled} ? 'Активен' : 'Заблокирован'"
+                th:classappend="${user.enabled} ? 'text-success' : 'text-danger'">Активен</td>
+            <td class="text-end">
+                <a class="btn btn-sm btn-outline-secondary"
+                   th:href="@{/admin/users/{username}/edit(username=${user.username})}">
+                    Редактировать
+                </a>
+                <form th:if="${user.enabled}"
+                      th:action="@{/admin/users/{username}/enabled(username=${user.username})}"
+                      method="post" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-outline-secondary"
+                            onclick="return confirm('Заблокировать пользователя?')">Заблокировать</button>
+                </form>
+                <form th:unless="${user.enabled}"
+                      th:action="@{/admin/users/{username}/enabled(username=${user.username})}"
+                      method="post" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-outline-secondary"
+                            onclick="return confirm('Разблокировать пользователя?')">Разблокировать</button>
+                </form>
+                <form th:action="@{/admin/users/{username}/delete(username=${user.username})}"
+                      method="post" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-outline-danger"
+                            onclick="return confirm('Удалить пользователя?')">Удалить</button>
+                </form>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(users)}">
+            <td colspan="7" class="text-center text-muted">Пользователей нет</td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

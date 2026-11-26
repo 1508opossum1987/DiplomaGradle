@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Редактирование пользователя')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+
+    <a th:href="@{/admin/users}" class="btn btn-link mb-2">← Назад</a>
+
+    <h1 class="mb-4">Редактирование пользователя</h1>
+
+    <form th:action="@{/admin/users/{username}/edit(username=${user.username})}" method="post">
+        <div class="mb-3">
+            <label class="form-label">Логин</label>
+            <input type="text" name="usernameNew" class="form-control" required
+                   th:value="${user.username}"
+                   minlength="4" maxlength="20" pattern="[a-zA-Z0-9_.-]+"
+                   title="4–20 символов: буквы, цифры, _ . -">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Новый пароль</label>
+            <input type="password" name="password" class="form-control" required
+                   minlength="4" maxlength="20"
+                   pattern="(?=.*[A-Za-z])(?=.*\d).{4,20}"
+                   title="4–20 символов, минимум одна латинская буква и одна цифра"
+                   autocomplete="new-password">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Имя</label>
+            <input type="text" name="name" class="form-control" required
+                   th:value="${user.name}"
+                   minlength="4" maxlength="20">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" required
+                   th:value="${user.email}"
+                   maxlength="40">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Роль</label>
+            <select name="roleName" class="form-select" required>
+                <option th:each="role : ${roles}"
+                        th:value="${role.name}"
+                        th:text="${role.name}"
+                        th:selected="${role.name == user.role.name}"></option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Статус</label>
+            <select name="enabled" class="form-select" required>
+                <option value="true" th:selected="${user.enabled}">Активен</option>
+                <option value="false" th:selected="${!user.enabled}">Заблокирован</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+
+</div>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

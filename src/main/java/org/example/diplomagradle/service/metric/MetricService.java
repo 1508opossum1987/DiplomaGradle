@@ -7,6 +7,7 @@ import org.example.diplomagradle.datamodel.repository.MetricValueRepository;
 import org.example.diplomagradle.service.block.BlockServiceInterface;
 import org.example.diplomagradle.service.block.EmptyBlocksException;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -187,5 +188,17 @@ public class MetricService implements MetricServiceInterface {
         return metrics;
     }
 
+    //изменение границ метрик
+    @Override
+    public void patchMetricMinMaxById(Long id, BigDecimal minValue, BigDecimal maxValue) {
+        if (id == null || id <= 0) {
+            throw new InvalidIdMetricException(id);
+        }
+        Metric metric = metricRepository.findById(id)
+                .orElseThrow(() -> new InvalidIdMetricException(id));
+        metric.setMinValue(minValue);
+        metric.setMaxValue(maxValue);
+        metricRepository.save(metric);
+    }
 
 }
