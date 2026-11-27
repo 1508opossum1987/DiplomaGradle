@@ -36,4 +36,7 @@ dependencies {
 }
 tasks.withType<Test> {
     useJUnitPlatform()
+    environment("DB_PASSWORD", System.getenv("DB_PASSWORD") ?: (project.findProperty("dbPassword") as String?) ?: "")
 }
+
+
